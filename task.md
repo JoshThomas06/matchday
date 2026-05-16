@@ -1,0 +1,17 @@
+- `[x]` 1. Clean up `app/dashboard/page.tsx`
+  - `[x]` Remove fake Run Progression widget
+  - `[x]` Remove fake Boundary Pulse widget
+- `[x]` 2. Update `app/stats/page.tsx` to handle `sport=cricket` gracefully
+- `[x]` 3. Implement Prediction Backend
+  - `[x]` Create `lib/db.ts` (using JSON file store to avoid native module build errors)
+  - `[x]` Update `app/api/polls/route.ts` to use persistent store
+  - `[x]` Update `app/api/leaderboard/route.ts` to use persistent store
+  - `[x]` Update `app/predictions/page.tsx` to remove localStorage dependency
+- `[x]` 4. Sidebar and Coming Soon Pages
+  - `[x]` `components/layout/SideNav.tsx` badges
+  - `[x]` `app/quiz/page.tsx` placeholder
+  - `[x]` `app/moments/page.tsx` placeholder
+  - `[x]` `app/watch/page.tsx` placeholder
+- `[x]` 5. Verification
+  - `[x]` Test build/run
+  - `[x]` Create walkthrough

@@ -13,6 +13,7 @@
   --amber:       #ffba3a;
   --text:        #d4e4fa;
   --muted:       #849585;
+  --text-muted:  #849585; /* alias — do not remove */
   --border:      rgba(255,255,255,0.07);
   --font:        'Archivo Narrow', sans-serif;
 }

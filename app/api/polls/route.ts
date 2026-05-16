@@ -1,21 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-
-// ── In-memory store (resets on server restart; swap for Redis/DB in production) ──
-interface Poll {
-  id: string;
-  matchId: string;
-  question: string;
-  options: string[];
-  votes: Record<string, number>;   // optionIndex → count
-  voters: Set<string>;             // userId → voted
-  createdAt: number;
-  closesAt: number;
-  closed: boolean;
-  triggerEvent: string;
-}
-
-const polls = new Map<string, Poll>();
-let pollSeq = 0;
+import { db, Poll } from "@/lib/db";
 
 // Event type → poll template
 const POLL_TEMPLATES: Record<string, { question: string; options: string[] }> = {
@@ -25,7 +9,10 @@ const POLL_TEMPLATES: Record<string, { question: string; options: string[] }> = 
 };
 
 function closeStalePoll(poll: Poll) {
-  if (!poll.closed && Date.now() > poll.closesAt) poll.closed = true;
+  if (!poll.closed && Date.now() > poll.closesAt) {
+    poll.closed = true;
+    db.savePoll(poll);
+  }
 }
 
 function pollToJSON(poll: Poll) {
@@ -44,13 +31,34 @@ function pollToJSON(poll: Poll) {
   };
 }
 
-// GET /api/polls?matchId=xxx — list active polls for a match
-// POST /api/polls           — create a poll (trigger system)
-// PUT  /api/polls           — cast a vote
-
 export async function GET(req: NextRequest) {
   const matchId = req.nextUrl.searchParams.get("matchId");
-  const all = [...polls.values()];
+  let all = db.getPolls();
+  
+  // Seed preset polls if empty
+  if (all.length === 0) {
+    const now = Date.now();
+    const presetPolls: Poll[] = [
+      {
+        id: "poll_seed_1", matchId: "demo_1", question: "Who will win the toss?",
+        options: ["Home Team", "Away Team"], votes: { 0: 45, 1: 55 },
+        voters: [], createdAt: now - 10000, closesAt: now + 600000, closed: false, triggerEvent: "toss"
+      },
+      {
+        id: "poll_seed_2", matchId: "demo_1", question: "Who scores the next goal?",
+        options: ["Arsenal", "Man City", "No Goal"], votes: { 0: 120, 1: 150, 2: 30 },
+        voters: [], createdAt: now - 300000, closesAt: now + 30000, closed: false, triggerEvent: "goal"
+      },
+      {
+        id: "poll_seed_3", matchId: "demo_2", question: "How many runs in this over?",
+        options: ["0-4", "5-8", "9-12", "13+"], votes: { 0: 10, 1: 50, 2: 30, 3: 5 },
+        voters: [], createdAt: now - 50000, closesAt: now - 1000, closed: true, triggerEvent: "over"
+      }
+    ];
+    for (const p of presetPolls) db.savePoll(p);
+    all = db.getPolls();
+  }
+
   const result = matchId
     ? all.filter(p => p.matchId === matchId)
     : all;
@@ -75,7 +83,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `Unknown event type: ${event}` }, { status: 400 });
   }
 
-  const id = `poll_${++pollSeq}_${Date.now()}`;
+  const seq = db.getNextPollSeq();
+  const id = `poll_${seq}_${Date.now()}`;
   const now = Date.now();
   const poll: Poll = {
     id,
@@ -83,14 +92,14 @@ export async function POST(req: NextRequest) {
     question: template.question,
     options: template.options,
     votes: Object.fromEntries(template.options.map((_, i) => [i, 0])),
-    voters: new Set(),
+    voters: [],
     createdAt: now,
     closesAt: now + durationSeconds * 1000,
     closed: false,
     triggerEvent: event,
   };
 
-  polls.set(id, poll);
+  db.savePoll(poll);
   return NextResponse.json(pollToJSON(poll), { status: 201 });
 }
 
@@ -106,17 +115,33 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "pollId, optionIndex, userId required" }, { status: 400 });
   }
 
-  const poll = polls.get(pollId);
+  const poll = db.getPoll(pollId);
   if (!poll) return NextResponse.json({ error: "Poll not found" }, { status: 404 });
 
   closeStalePoll(poll);
   if (poll.closed) return NextResponse.json({ error: "Poll is closed" }, { status: 409 });
-  if (poll.voters.has(userId)) return NextResponse.json({ error: "Already voted" }, { status: 409 });
+  if (poll.voters.includes(userId)) return NextResponse.json({ error: "Already voted" }, { status: 409 });
   if (optionIndex < 0 || optionIndex >= poll.options.length) {
     return NextResponse.json({ error: "Invalid option" }, { status: 400 });
   }
 
   poll.votes[optionIndex] = (poll.votes[optionIndex] ?? 0) + 1;
-  poll.voters.add(userId);
+  poll.voters.push(userId);
+  db.savePoll(poll);
+
+  // Give user some points for participating
+  const user = db.getUser(userId);
+  user.totalPredictions += 1;
+  user.points += 3; // 3 points for voting
+  user.history.push({
+    pollId: poll.id,
+    question: poll.question,
+    choice: poll.options[optionIndex],
+    choiceIndex: optionIndex,
+    ts: Date.now(),
+    matchId: poll.matchId,
+  });
+  db.updateUser(user);
+
   return NextResponse.json(pollToJSON(poll));
 }

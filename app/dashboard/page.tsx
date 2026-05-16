@@ -1,53 +1,35 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
+
+import { useCricketMatches } from "@/services/cricket/api";
+import { NormalizedCricMatch } from "@/lib/normalizers/cricket";
 
 type CommentaryType = "SIX" | "FOUR" | "WICKET" | "DOT" | "1 RUN" | "2 RUNS" | "WIDE" | "NO BALL";
 
-const MATCH = {
-  competition: "T20 World Cup Final",
-  venue: "Melbourne Cricket Ground",
-  homeTeam: "India",   homeShort: "IND", homeEmoji: "🇮🇳", homeBg: "#1a3a6e",
-  awayTeam: "Australia", awayShort: "AUS", awayEmoji: "🇦🇺", awayBg: "#b8860b",
-  score: "184/3", overs: "18.2", crr: "10.04", rrr: "12.00",
-  batter1: { name: "V. Kohli*", runs: 74, balls: 42 },
-  batter2: { name: "H. Pandya", runs: 38, balls: 21 },
-  bowler:  { name: "P. Cummins", wkts: 1, runs: 32, overs: "3.2" },
-  partnership: { runs: 92, p1: "Kohli", p1r: 54, p1b: 32, p2: "Pandya", p2r: 38, p2b: 21 },
-  runRateData: [20, 35, 30, 45, 60, 55, 75, 85, 90],
-  boundaryData: [8, 12, 6, 20, 10, 16, 8],
-  polls: [{ name: "Adam Zampa", pct: 42 }, { name: "Josh Hazlewood", pct: 28 }, { name: "Run Out / Other", pct: 30 }],
-  ratings: [
-    { name: "Virat Kohli",   rating: 9.2, emoji: "🇮🇳", team: "home" as const },
-    { name: "Hardik Pandya", rating: 8.5, emoji: "🇮🇳", team: "home" as const },
-    { name: "Pat Cummins",   rating: 7.8, emoji: "🇦🇺", team: "away" as const },
-  ],
-  commentary: [
-    { over: "18.2", type: "SIX" as CommentaryType, headline: "Kohli launches it!", body: "Massive strike over long-on. Cummins missed his length and Virat was all over it. The crowd at MCG has absolutely erupted. That brings up the 90-run partnership!" },
-    { over: "18.1", type: "1 RUN" as CommentaryType, headline: "", body: "Slower ball from Cummins, Pandya tucks it away to deep mid-wicket. Easy single taken." },
-    { over: "17.6", type: "DOT" as CommentaryType, headline: "", body: "Starc finishes with a wide yorker. Kohli can only dig it out. Strong finish to the over from Starc." },
-  ],
-};
-
-const CATEGORIES = ["T20 World Cup", "IPL", "Test Matches", "ODI", "Series Hub"];
-
-const BADGE_COLORS: Record<CommentaryType, { bg: string; color: string }> = {
+const BADGE: Record<CommentaryType, { bg: string; color: string }> = {
   "SIX":     { bg: "#00ff87", color: "#003919" },
   "FOUR":    { bg: "#3b82f6", color: "#fff" },
   "WICKET":  { bg: "#ef4444", color: "#fff" },
-  "DOT":     { bg: "#273647", color: "#b9cbb9" },
-  "1 RUN":   { bg: "#273647", color: "#b9cbb9" },
-  "2 RUNS":  { bg: "#273647", color: "#b9cbb9" },
+  "DOT":     { bg: "#273647", color: "#849585" },
+  "1 RUN":   { bg: "#273647", color: "#849585" },
+  "2 RUNS":  { bg: "#273647", color: "#849585" },
   "WIDE":    { bg: "#f97316", color: "#fff" },
   "NO BALL": { bg: "#f97316", color: "#fff" },
 };
 
+function fmtScore(s?: { runs: number, wickets: number, overs: number }) {
+  if (!s) return null;
+  return `${s.runs}/${s.wickets} (${typeof s.overs === "number" ? s.overs.toFixed(1) : s.overs} ov)`;
+}
+
+// ── Reusable UI atoms ──────────────────────────────────────────────────────
 function Card({ children, style = {} }: { children: React.ReactNode; style?: React.CSSProperties }) {
   return (
     <div style={{
       background: "rgba(18,33,49,0.65)", backdropFilter: "blur(20px)",
       WebkitBackdropFilter: "blur(20px)",
-      border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12,
-      ...style,
+      border: "1px solid rgba(255,255,255,0.07)", borderRadius: 12, ...style,
     }}>{children}</div>
   );
 }
@@ -58,310 +40,347 @@ function LiveBadge() {
       display: "inline-flex", alignItems: "center", gap: 8,
       background: "rgba(0,0,0,0.45)", backdropFilter: "blur(12px)",
       padding: "8px 16px", borderRadius: 9999,
-      border: "1px solid rgba(0,255,135,0.25)",
+      border: "1px solid rgba(239,68,68,0.4)",
     }}>
-      <span style={{
-        width: 8, height: 8, borderRadius: "50%", background: "var(--green)",
-        display: "inline-block", flexShrink: 0, animation: "pulse-dot 2s infinite",
-      }} />
-      <span style={{
-        fontFamily: "var(--font)", fontSize: 11, fontWeight: 700,
-        letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--green)",
-      }}>Live · {MATCH.competition}</span>
+      <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#ef4444", display: "inline-block", animation: "pulse-dot 1.5s infinite" }} />
+      <span style={{ fontWeight: 700, fontSize: 11, letterSpacing: "0.12em", color: "#fff", textTransform: "uppercase" }}>Live</span>
     </div>
   );
 }
 
-function FeaturedHero() {
-  return (
-    <Card style={{ position: "relative", overflow: "hidden", minHeight: 420 }}>
-      <div style={{
-        position: "absolute", inset: 0, zIndex: 0,
-        background: "radial-gradient(ellipse at 50% 0%, rgba(0,255,135,0.07) 0%, transparent 65%), linear-gradient(to bottom, rgba(5,20,36,0.3) 0%, rgba(5,20,36,0.97) 100%)",
-      }} />
-      <div style={{ position: "relative", zIndex: 1, padding: 24, display: "flex", flexDirection: "column", gap: 0, height: "100%" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-          <LiveBadge />
-          <Card style={{ padding: "8px 14px", borderRadius: 8, display: "flex", alignItems: "center", gap: 8 }}>
-            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--amber)" strokeWidth={1.8}>
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-            </svg>
-            <span style={{ fontFamily: "var(--font)", fontSize: 14, color: "var(--text)" }}>{MATCH.venue}</span>
-          </Card>
-        </div>
-
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 48, gap: 16 }}>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 80, height: 80, borderRadius: "50%", background: MATCH.homeBg, border: "2px solid rgba(255,255,255,0.18)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 38, boxShadow: "0 8px 32px rgba(0,0,0,0.5)" }}>{MATCH.homeEmoji}</div>
-            <h2 style={{ fontFamily: "var(--font)", fontWeight: 700, fontSize: 28, color: "#fff", textTransform: "uppercase", letterSpacing: "-0.02em" }}>{MATCH.homeTeam}</h2>
-            <span style={{ fontFamily: "var(--font)", fontSize: 11, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase" }}>Batting</span>
-          </div>
-
-          <div style={{ textAlign: "center", flex: 1 }}>
-            <div style={{ fontFamily: "var(--font)", fontWeight: 700, fontSize: 68, letterSpacing: "-0.04em", lineHeight: 1, color: "var(--green)", textShadow: "0 0 30px rgba(0,255,135,0.45)" }}>{MATCH.score}</div>
-            <div style={{ fontFamily: "var(--font)", fontWeight: 600, fontSize: 22, color: "var(--text)", marginTop: 8 }}>{MATCH.overs} Overs</div>
-            <div style={{ fontFamily: "var(--font)", fontSize: 12, color: "var(--text-muted)", marginTop: 4, letterSpacing: "0.04em" }}>
-              CRR: {MATCH.crr} &nbsp;|&nbsp; RRR: {MATCH.rrr}
-            </div>
-          </div>
-
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 80, height: 80, borderRadius: "50%", background: MATCH.awayBg, border: "2px solid rgba(255,255,255,0.18)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 38, boxShadow: "0 8px 32px rgba(0,0,0,0.5)" }}>{MATCH.awayEmoji}</div>
-            <h2 style={{ fontFamily: "var(--font)", fontWeight: 700, fontSize: 28, color: "#fff", textTransform: "uppercase", letterSpacing: "-0.02em" }}>{MATCH.awayTeam}</h2>
-            <span style={{ fontFamily: "var(--font)", fontSize: 11, letterSpacing: "0.1em", color: "var(--text-muted)", textTransform: "uppercase" }}>Bowling</span>
-          </div>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginTop: 36 }}>
-          <Card style={{ padding: "10px 14px", borderLeft: "3px solid var(--green)", borderRadius: 8 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "var(--font)", fontSize: 14 }}>
-              <span style={{ fontWeight: 700, color: "#f1ffef" }}>{MATCH.batter1.name}</span>
-              <span style={{ color: "var(--text)" }}>{MATCH.batter1.runs} ({MATCH.batter1.balls})</span>
-            </div>
-          </Card>
-          <Card style={{ padding: "10px 14px", borderLeft: "3px solid var(--amber)", borderRadius: 8 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "var(--font)", fontSize: 14 }}>
-              <span style={{ fontWeight: 700, color: "#f1ffef" }}>{MATCH.bowler.name}</span>
-              <span style={{ color: "var(--text)" }}>{MATCH.bowler.wkts}/{MATCH.bowler.runs} ({MATCH.bowler.overs})</span>
-            </div>
-          </Card>
-        </div>
-      </div>
-    </Card>
-  );
+function SkeletonRow({ w = "100%", h = 16 }: { w?: string; h?: number }) {
+  return <div style={{ width: w, height: h, background: "rgba(255,255,255,0.06)", borderRadius: 4, marginBottom: 8, animation: "pulse-dot 1.5s infinite" }} />;
 }
 
-function BoundaryPulse() {
+// ── Match Picker strip ─────────────────────────────────────────────────────
+function MatchPicker({ matches, selected, onSelect }: {
+  matches: NormalizedCricMatch[];
+  selected: string;
+  onSelect: (id: string) => void;
+}) {
   return (
-    <Card style={{ padding: 16, boxShadow: "0 0 16px rgba(0,255,135,0.15)" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-        <span style={{ fontFamily: "var(--font)", fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-muted)" }}>Boundary Pulse</span>
-        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="var(--green)" strokeWidth={2}>
-          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
-        </svg>
-      </div>
-      <div style={{ height: 80, display: "flex", alignItems: "flex-end", gap: 4, padding: "0 4px" }}>
-        {MATCH.boundaryData.map((h, i) => {
-          const pct = (h / 20) * 100;
-          const isHigh = i === 3;
-          return (
-            <div key={i} style={{
-              flex: 1, borderRadius: "3px 3px 0 0", height: `${pct}%`, minHeight: 4,
-              background: isHigh ? "var(--green)" : `rgba(0,255,135,${0.1 + pct / 200})`,
-              transition: "height 0.3s",
-              animation: isHigh ? "pulse-dot 1.5s infinite" : "none",
-            }} />
-          );
-        })}
-      </div>
-      <p style={{ fontFamily: "var(--font)", fontSize: 10, color: "var(--text-muted)", textAlign: "center", marginTop: 8, letterSpacing: "0.08em", textTransform: "uppercase" }}>
-        High excitement detected in the last 2 overs
-      </p>
-    </Card>
-  );
-}
-
-function NextWicketPoll() {
-  const [voted, setVoted] = useState<number | null>(null);
-  return (
-    <Card style={{ padding: 16 }}>
-      <h3 style={{ fontFamily: "var(--font)", fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: 12 }}>
-        Who takes the next wicket?
-      </h3>
-      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {MATCH.polls.map((opt, i) => (
-          <button key={i} onClick={() => setVoted(i)} style={{
-            width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center",
-            background: voted === i ? "rgba(0,255,135,0.1)" : "rgba(5,20,36,0.5)",
-            border: `1px solid ${voted === i ? "rgba(0,255,135,0.35)" : "rgba(255,255,255,0.06)"}`,
-            borderRadius: 8, padding: "10px 14px", cursor: "pointer", transition: "all 0.2s",
+    <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 4, marginBottom: 24 }}>
+      {matches.map(m => {
+        const active = m.id === selected;
+        return (
+          <button key={m.id} onClick={() => onSelect(m.id)} style={{
+            flexShrink: 0, padding: "8px 16px", borderRadius: 8, border: "none",
+            background: active ? "var(--green)" : "rgba(18,33,49,0.7)",
+            color: active ? "var(--green-dark)" : "var(--muted)",
+            fontFamily: "var(--font)", fontWeight: 700, fontSize: 11,
+            letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer",
+            outline: active ? "none" : "1px solid rgba(255,255,255,0.07)",
+            transition: "all 0.2s", whiteSpace: "nowrap",
           }}>
-            <span style={{ fontFamily: "var(--font)", fontSize: 14, color: "var(--text)" }}>{opt.name}</span>
-            <span style={{ fontFamily: "var(--font)", fontWeight: 700, fontSize: 14, color: (i === 0 || voted === i) ? "var(--green)" : "var(--text-muted)" }}>{opt.pct}%</span>
+            {m.isLive && <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: active ? "#003919" : "#ef4444", marginRight: 6, verticalAlign: "middle" }} />}
+            {m.name.length > 34 ? m.name.slice(0, 34) + "…" : m.name}
           </button>
-        ))}
-      </div>
-    </Card>
+        );
+      })}
+    </div>
   );
 }
 
-function Partnership() {
-  const p1pct = Math.round((MATCH.partnership.p1r / (MATCH.partnership.p1r + MATCH.partnership.p2r)) * 100);
+// ── Score hero ─────────────────────────────────────────────────────────────
+function ScoreHero({ match }: { match: NormalizedCricMatch }) {
+  const s1 = fmtScore(match.scores[0]);
+  const s2 = fmtScore(match.scores[1]);
   return (
-    <Card style={{ padding: 16 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-        <h3 style={{ fontFamily: "var(--font)", fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--text-muted)" }}>Partnership</h3>
-        <span style={{ fontFamily: "var(--font)", fontWeight: 700, color: "var(--green)", fontSize: 14 }}>{MATCH.partnership.runs} Runs</span>
+    <Card style={{ padding: "28px 32px", marginBottom: 20, position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(0,255,135,0.04) 0%, transparent 60%)", pointerEvents: "none" }} />
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 20 }}>
+        <div>
+          {match.matchState === "LIVE" && <LiveBadge />}
+          {match.matchState === "COMPLETED" && (
+            <span style={{ padding: "6px 14px", borderRadius: 9999, background: "rgba(255,255,255,0.08)", color: "var(--muted)", fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>COMPLETED</span>
+          )}
+          {match.matchState === "UPCOMING" && (
+            <span style={{ padding: "6px 14px", borderRadius: 9999, background: "rgba(255,186,58,0.12)", color: "var(--amber)", border: "1px solid rgba(255,186,58,0.2)", fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>UPCOMING</span>
+          )}
+          {match.matchState === "DELAYED" && (
+            <span style={{ padding: "6px 14px", borderRadius: 9999, background: "rgba(249,115,22,0.12)", color: "#f97316", border: "1px solid rgba(249,115,22,0.2)", fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>DELAYED</span>
+          )}
+          {match.matchState === "ABANDONED" && (
+            <span style={{ padding: "6px 14px", borderRadius: 9999, background: "rgba(239,68,68,0.12)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.2)", fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>ABANDONED</span>
+          )}
+        </div>
+        <div style={{ textAlign: "right" }}>
+          <div style={{ fontSize: 10, color: "var(--muted)", letterSpacing: "0.08em", textTransform: "uppercase" }}>Venue</div>
+          <div style={{ fontSize: 13, color: "var(--text)" }}>{match.venue}</div>
+        </div>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <div style={{ flex: 1, textAlign: "right" }}>
-          <p style={{ fontFamily: "var(--font)", fontWeight: 700, color: "#f1ffef", marginBottom: 2 }}>{MATCH.partnership.p1}</p>
-          <p style={{ fontFamily: "var(--font)", fontSize: 12, color: "var(--text-muted)" }}>{MATCH.partnership.p1r} ({MATCH.partnership.p1b})</p>
-        </div>
-        <div style={{ width: 120, height: 8, background: "var(--surface-top)", borderRadius: 9999, overflow: "hidden", display: "flex", flexShrink: 0 }}>
-          <div style={{ height: "100%", background: "var(--green)", width: `${p1pct}%`, transition: "width 1s" }} />
-          <div style={{ height: "100%", background: "var(--amber)", flex: 1 }} />
-        </div>
+
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 20 }}>
         <div style={{ flex: 1 }}>
-          <p style={{ fontFamily: "var(--font)", fontWeight: 700, color: "#f1ffef", marginBottom: 2 }}>{MATCH.partnership.p2}</p>
-          <p style={{ fontFamily: "var(--font)", fontSize: 12, color: "var(--text-muted)" }}>{MATCH.partnership.p2r} ({MATCH.partnership.p2b})</p>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 4 }}>{match.homeTeam}</div>
+          {s1 ? (
+            <div style={{ fontSize: 36, fontWeight: 700, color: "var(--green)", letterSpacing: "-0.02em", textShadow: "0 0 20px rgba(0,255,135,0.3)" }}>{s1}</div>
+          ) : (
+            <div style={{ fontSize: 28, fontWeight: 700, color: "var(--muted)" }}>Yet to bat</div>
+          )}
         </div>
+        <div style={{ textAlign: "center", padding: "0 16px" }}>
+          <div style={{ fontSize: 22, fontWeight: 900, fontStyle: "italic", color: "var(--amber)" }}>VS</div>
+        </div>
+        <div style={{ flex: 1, textAlign: "right" }}>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 4 }}>{match.awayTeam}</div>
+          {s2 ? (
+            <div style={{ fontSize: 36, fontWeight: 700, color: "var(--text)", letterSpacing: "-0.02em" }}>{s2}</div>
+          ) : (
+            <div style={{ fontSize: 28, fontWeight: 700, color: "var(--muted)" }}>Yet to bat</div>
+          )}
+        </div>
+      </div>
+
+      <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid rgba(255,255,255,0.06)", fontSize: 13, color: "var(--muted)" }}>
+        {match.status}
       </div>
     </Card>
   );
 }
 
-function RunRateGraph() {
+// ── Commentary balls strip ──────────────────────────────────────────────────
+function BallsStrip({ balls }: { balls?: string[] }) {
+  if (!balls?.length) return null;
+  const displayBalls = balls.slice(-6);
+  const colorMap: Record<string, { bg: string; text: string }> = {
+    "W": { bg: "#ef4444", text: "#fff" },
+    "6": { bg: "#00ff87", text: "#003919" },
+    "4": { bg: "#3b82f6", text: "#fff" },
+    "0": { bg: "#273647", text: "#849585" },
+    "WD": { bg: "#f97316", text: "#fff" },
+    "NB": { bg: "#f97316", text: "#fff" },
+  };
   return (
-    <Card style={{ padding: 24, display: "flex", flexDirection: "column", minHeight: 280 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-        <h3 style={{ fontFamily: "var(--font)", fontWeight: 700, fontSize: 22, color: "#fff", letterSpacing: "-0.01em" }}>Run Rate Progression</h3>
-        <div style={{ display: "flex", gap: 16 }}>
-          {[{ color: "var(--green)", label: "IND", dim: false }, { color: "var(--surface-top)", label: "AUS (Projected)", dim: true }].map(item => (
-            <div key={item.label} style={{ display: "flex", alignItems: "center", gap: 6, opacity: item.dim ? 0.4 : 1 }}>
-              <span style={{ width: 10, height: 10, borderRadius: "50%", background: item.color, display: "inline-block", border: item.dim ? "1px solid rgba(255,255,255,0.2)" : "none" }} />
-              <span style={{ fontFamily: "var(--font)", fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--text)" }}>{item.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div style={{ flex: 1, display: "flex", alignItems: "flex-end", gap: 6, borderLeft: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.07)", padding: "0 0 6px 6px", minHeight: 160 }}>
-        {MATCH.runRateData.map((h, i) => (
-          <div key={i} style={{ flex: 1 }}>
-            <div style={{ height: `${h}%`, minHeight: 4, background: "rgba(0,255,135,0.15)", borderTop: "2px solid var(--green)", borderRadius: "3px 3px 0 0", transition: "height 0.5s ease" }} />
-          </div>
-        ))}
-      </div>
-      <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8 }}>
-        {["Over 1", "Over 10", "Over 20"].map(l => (
-          <span key={l} style={{ fontFamily: "var(--font)", fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.08em", textTransform: "uppercase" }}>{l}</span>
-        ))}
-      </div>
+    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+      <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginRight: 4 }}>THIS OVER</span>
+      {displayBalls.map((b, i) => {
+        const c = colorMap[b] ?? { bg: "#1c2b3c", text: "#d4e4fa" };
+        return (
+          <div key={i} style={{
+            width: 36, height: 36, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center",
+            background: c.bg, color: c.text, fontSize: 13, fontWeight: 700,
+          }}>{b}</div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ── No matches fallback ────────────────────────────────────────────────────
+function NoMatches() {
+  return (
+    <Card style={{ padding: "40px 24px", textAlign: "center" }}>
+      <div style={{ fontSize: 48, marginBottom: 16 }}>🏏</div>
+      <h2 style={{ fontSize: 24, fontWeight: 700, color: "#fff", marginBottom: 8 }}>No Live Cricket Right Now</h2>
+      <p style={{ color: "var(--muted)", fontSize: 14, maxWidth: 320, margin: "0 auto 24px" }}>
+        Cricket matches will appear here automatically when they go live. Check back during IPL, Test matches, or international fixtures.
+      </p>
+      <Link href="/" style={{
+        display: "inline-block", padding: "12px 28px", background: "var(--green)", color: "var(--green-dark)",
+        borderRadius: 8, fontWeight: 700, fontSize: 13, letterSpacing: "0.06em", textTransform: "uppercase",
+      }}>← Back to Home</Link>
     </Card>
   );
 }
 
-function MatchRatings() {
-  return (
-    <Card style={{ padding: 20 }}>
-      <h3 style={{ fontFamily: "var(--font)", fontWeight: 700, fontSize: 22, color: "#fff", letterSpacing: "-0.01em", marginBottom: 20 }}>Match Ratings</h3>
-      <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-        {MATCH.ratings.map((p, i) => (
-          <div key={i} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{ width: 40, height: 40, borderRadius: "50%", background: p.team === "home" ? "#1a3a6e" : "#b8860b", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>
-              {p.emoji}
-            </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
-                <span style={{ fontFamily: "var(--font)", fontWeight: 700, color: "#f1ffef", fontSize: 14 }}>{p.name}</span>
-                <span style={{ fontFamily: "var(--font)", fontWeight: 700, fontSize: 14, color: p.team === "home" ? "var(--green)" : "var(--amber)" }}>{p.rating}</span>
-              </div>
-              <div style={{ height: 4, background: "var(--surface-top)", borderRadius: 9999, overflow: "hidden" }}>
-                <div style={{ height: "100%", width: `${p.rating * 10}%`, background: p.team === "home" ? "var(--green)" : "var(--amber)", borderRadius: 9999, transition: "width 1s" }} />
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-      <button style={{ width: "100%", marginTop: 18, padding: "8px 0", background: "none", border: "none", cursor: "pointer", fontFamily: "var(--font)", fontSize: 12, color: "var(--text-muted)", letterSpacing: "0.06em", textTransform: "uppercase", transition: "color 0.2s" }}
-        onMouseOver={e => (e.currentTarget.style.color = "var(--green)")}
-        onMouseOut={e => (e.currentTarget.style.color = "var(--text-muted)")}>
-        View Detailed Player Hub
-      </button>
-    </Card>
-  );
-}
-
-function Commentary() {
-  const [mode, setMode] = useState<"critical" | "full">("critical");
-  return (
-    <Card style={{ padding: 24 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, paddingBottom: 16, borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-        <h3 style={{ fontFamily: "var(--font)", fontWeight: 700, fontSize: 22, color: "#fff" }}>Live Commentary</h3>
-        <div style={{ display: "flex", gap: 6 }}>
-          {(["critical", "full"] as const).map(m => (
-            <button key={m} onClick={() => setMode(m)} style={{
-              padding: "4px 10px", borderRadius: 4, border: "none", cursor: "pointer",
-              fontFamily: "var(--font)", fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
-              background: mode === m ? "var(--green)" : "var(--surface-top)",
-              color: mode === m ? "#003919" : "var(--text-muted)",
-              transition: "all 0.2s",
-            }}>{m === "critical" ? "Critical Only" : "Full Feed"}</button>
-          ))}
-        </div>
-      </div>
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        {MATCH.commentary.map((item, i) => {
-          const badge = BADGE_COLORS[item.type];
-          return (
-            <div key={i} style={{ display: "flex", gap: 20, paddingBottom: 20, marginBottom: i < MATCH.commentary.length - 1 ? 20 : 0, borderBottom: i < MATCH.commentary.length - 1 ? "1px solid rgba(255,255,255,0.05)" : "none" }}>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", minWidth: 44 }}>
-                <span style={{ fontFamily: "var(--font)", fontWeight: 700, fontSize: 20, color: i === 0 ? "var(--green)" : "var(--text-muted)" }}>{item.over}</span>
-                {i < MATCH.commentary.length - 1 && <div style={{ width: 1, flex: 1, background: "rgba(59,75,61,0.35)", marginTop: 8 }} />}
-              </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                  <span style={{ background: badge.bg, color: badge.color, padding: "2px 8px", borderRadius: 9999, fontSize: 10, fontWeight: 900, fontFamily: "var(--font)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
-                    {item.type}
-                  </span>
-                  {item.headline && <span style={{ fontFamily: "var(--font)", fontWeight: 700, fontSize: 16, color: "var(--text)" }}>{item.headline}</span>}
-                </div>
-                <p style={{ fontFamily: "var(--font)", fontSize: 14, color: "var(--text-muted)", lineHeight: 1.65 }}>{item.body}</p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </Card>
-  );
-}
+// ── Main page ──────────────────────────────────────────────────────────────
+const CATEGORIES = ["IPL", "T20 World Cup", "Test Matches", "ODI", "Series Hub"];
 
 export default function DashboardPage() {
+  const { data: cricketMatches = [], isLoading: loading, error: fetchError } = useCricketMatches();
+  const [selectedId, setSelectedId] = useState<string>("");
   const [activeCategory, setActiveCategory] = useState(0);
 
+  // Auto-select
+  useEffect(() => {
+    if (cricketMatches.length > 0 && !selectedId) {
+      const live = cricketMatches.find(m => m.isLive);
+      setSelectedId(live?.id ?? cricketMatches[0].id);
+    }
+  }, [cricketMatches, selectedId]);
+
+  const error = fetchError ? "Live connection unavailable" : "";
+
+  const activeCategoryName = CATEGORIES[activeCategory];
+  const filteredMatches = cricketMatches.filter(m => {
+    if (activeCategoryName === "IPL") return m.name.toLowerCase().includes("ipl") || m.name.toLowerCase().includes("premier league") || m.name.toLowerCase().includes("super kings") || m.name.toLowerCase().includes("knight riders") || m.name.toLowerCase().includes("royal challengers") || m.name.toLowerCase().includes("indians") || m.name.toLowerCase().includes("sunrisers") || m.name.toLowerCase().includes("capitals") || m.name.toLowerCase().includes("titans") || m.name.toLowerCase().includes("super giants");
+    if (activeCategoryName === "Test Matches") return m.name.toLowerCase().includes("test");
+    if (activeCategoryName === "T20 World Cup") return m.name.toLowerCase().includes("t20") && m.name.toLowerCase().includes("world cup");
+    if (activeCategoryName === "ODI") return m.name.toLowerCase().includes("odi");
+    return true; // Series Hub / Default
+  });
+
+  // Ensure selectedId is valid within filtered, else pick the first live or first available
+  const validSelectedId = filteredMatches.find(m => m.id === selectedId) ? selectedId : (filteredMatches.find(m => m.isLive)?.id ?? filteredMatches[0]?.id ?? "");
+
+  const selected = filteredMatches.find(m => m.id === validSelectedId);
+
   return (
-    <div style={{ padding: "24px 24px 48px", background: "var(--bg)", minHeight: "100%" }}>
-      {/* Category pills */}
-      <div style={{ display: "flex", gap: 10, marginBottom: 24, overflowX: "auto", paddingBottom: 4 }}>
+    <div style={{ padding: "24px 24px 48px", minHeight: "100%" }}>
+
+      {/* Header */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 20 }}>
+        <div>
+          <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.14em", color: "var(--green)", marginBottom: 4, textTransform: "uppercase" }}>
+            Cricket · Live Dashboard
+          </div>
+          <h1 style={{ fontSize: 36, fontWeight: 900, fontStyle: "italic", color: "#fff", letterSpacing: "-0.03em", lineHeight: 1 }}>
+            CRICKET <span style={{ color: "var(--green)" }}>LIVE</span>
+          </h1>
+        </div>
+        <div style={{ textAlign: "right" }}>
+          <div style={{ fontSize: 11, color: "var(--muted)" }}>
+            {/* Updated state handles automatically by React Query */}
+            {!loading && "LIVE POLLING ACTIVE"}
+          </div>
+          {error && <div style={{ fontSize: 11, color: "var(--amber)", marginTop: 2 }}>⚠ {error}</div>}
+        </div>
+      </div>
+
+      {/* Category tabs */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 24, overflowX: "auto", paddingBottom: 4 }}>
         {CATEGORIES.map((cat, i) => (
           <button key={cat} onClick={() => setActiveCategory(i)} style={{
-            padding: "8px 20px", borderRadius: 9999, whiteSpace: "nowrap",
-            background: activeCategory === i ? "rgba(0,255,135,0.1)" : "rgba(18,33,49,0.6)",
-            border: `1px solid ${activeCategory === i ? "var(--green)" : "rgba(255,255,255,0.07)"}`,
-            color: activeCategory === i ? "var(--green)" : "var(--text-muted)",
-            fontFamily: "var(--font)", fontSize: 12, fontWeight: 700, letterSpacing: "0.06em",
-            cursor: "pointer", transition: "all 0.2s",
+            padding: "7px 18px", borderRadius: 9999, border: "none", whiteSpace: "nowrap",
+            background: activeCategory === i ? "rgba(0,255,135,0.12)" : "rgba(18,33,49,0.6)",
+            outline: `1px solid ${activeCategory === i ? "var(--green)" : "var(--border)"}`,
+            color: activeCategory === i ? "var(--green)" : "var(--muted)",
+            fontFamily: "var(--font)", fontSize: 12, fontWeight: 700,
+            letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer", transition: "all 0.2s",
           }}>{cat}</button>
         ))}
       </div>
 
-      {/* Bento grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)", gap: 16 }}>
-        <div style={{ gridColumn: "span 8" }}><FeaturedHero /></div>
-        <div style={{ gridColumn: "span 4", display: "flex", flexDirection: "column", gap: 16 }}>
-          <BoundaryPulse />
-          <NextWicketPoll />
-          <Partnership />
+      {/* Loading skeleton */}
+      {loading && (
+        <div>
+          <SkeletonRow h={200} />
+          <SkeletonRow h={120} />
         </div>
-        <div style={{ gridColumn: "span 8" }}><RunRateGraph /></div>
-        <div style={{ gridColumn: "span 4" }}><MatchRatings /></div>
-        <div style={{ gridColumn: "1 / -1" }}><Commentary /></div>
-      </div>
+      )}
 
-      {/* FAB */}
-      <button style={{
-        position: "fixed", bottom: 32, right: 32,
-        width: 56, height: 56, borderRadius: "50%",
-        background: "var(--green)", color: "#003919",
-        border: "none", cursor: "pointer",
-        boxShadow: "0 0 24px rgba(0,255,135,0.45)",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        transition: "transform 0.2s", zIndex: 50, fontSize: 22,
-      }}
-        onMouseOver={e => (e.currentTarget.style.transform = "scale(1.1)")}
-        onMouseOut={e => (e.currentTarget.style.transform = "scale(1)")}>
-        📊
-      </button>
+      {/* No matches */}
+      {!loading && filteredMatches.length === 0 && <NoMatches />}
+
+      {/* Main content */}
+      {!loading && filteredMatches.length > 0 && (
+        <>
+          {/* Match picker (only show if multiple) */}
+          {filteredMatches.length > 1 && (
+            <MatchPicker matches={filteredMatches} selected={validSelectedId} onSelect={setSelectedId} />
+          )}
+
+          {selected && (
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 20, alignItems: "start" }}>
+
+              {/* LEFT — Score + Analytics */}
+              <div>
+                <ScoreHero match={selected} />
+
+                {/* Status line */}
+                <Card style={{ padding: "16px 20px", marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+                  <div style={{ display: "flex", gap: 24 }}>
+                    {selected.scores[0] && (
+                      <div>
+                        <div style={{ fontSize: 10, color: "var(--muted)", letterSpacing: "0.06em", textTransform: "uppercase" }}>CRR</div>
+                        <div style={{ fontSize: 20, fontWeight: 700, color: "var(--green)" }}>
+                          {selected.scores[0].overs > 0 ? (selected.scores[0].runs / selected.scores[0].overs).toFixed(2) : "—"}
+                        </div>
+                      </div>
+                    )}
+                    {selected.scores[0] && (
+                      <div>
+                        <div style={{ fontSize: 10, color: "var(--muted)", letterSpacing: "0.06em", textTransform: "uppercase" }}>Wickets</div>
+                        <div style={{ fontSize: 20, fontWeight: 700, color: "#fff" }}>{selected.scores[0].wickets ?? "—"}/10</div>
+                      </div>
+                    )}
+                    {selected.scores[0] && (
+                      <div>
+                        <div style={{ fontSize: 10, color: "var(--muted)", letterSpacing: "0.06em", textTransform: "uppercase" }}>Overs</div>
+                        <div style={{ fontSize: 20, fontWeight: 700, color: "#fff" }}>{selected.scores[0].overs ?? "—"}</div>
+                      </div>
+                    )}
+                  </div>
+                  <Link href={`/stats?id=${selected.id}&sport=cricket`}
+                    style={{ fontSize: 12, fontWeight: 700, color: "var(--green)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                    View Analytics →
+                  </Link>
+                </Card>
+
+                {/* Removed fake Run Progression and Boundary Pulse widgets as per requirements */}
+              </div>
+
+              {/* RIGHT — Sidebar */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                {/* Match list */}
+                <Card style={{ padding: 16 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 12 }}>All Matches</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                    {filteredMatches.slice(0, 6).map(m => (
+                      <button key={m.id} onClick={() => setSelectedId(m.id)} style={{
+                        padding: "10px 12px", borderRadius: 8, border: "none", textAlign: "left", cursor: "pointer",
+                        background: m.id === validSelectedId ? "rgba(0,255,135,0.08)" : "rgba(0,0,0,0.2)",
+                        outline: m.id === validSelectedId ? "1px solid rgba(0,255,135,0.3)" : "1px solid rgba(255,255,255,0.05)",
+                        transition: "all 0.2s",
+                      }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                          {m.matchState === "LIVE" && <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#ef4444", flexShrink: 0, display: "inline-block" }} />}
+                          <span style={{ fontSize: 11, color: m.matchState === "LIVE" ? "#ef4444" : "var(--muted)", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                            {m.matchState}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: "#fff", lineHeight: 1.4 }}>
+                          {m.name.length > 36 ? m.name.slice(0, 36) + "…" : m.name}
+                        </div>
+                        {fmtScore(m.scores[0]) && (
+                          <div style={{ fontSize: 13, fontWeight: 700, color: "var(--green)", marginTop: 4 }}>{fmtScore(m.scores[0])}</div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </Card>
+
+                {/* Next wicket poll link */}
+                <Card style={{ padding: 16 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 10 }}>Fan Interaction</div>
+                  <Link href="/predictions" style={{
+                    display: "block", padding: "12px", background: "rgba(0,255,135,0.08)",
+                    border: "1px solid rgba(0,255,135,0.2)", borderRadius: 8, marginBottom: 8,
+                    color: "var(--green)", fontWeight: 700, fontSize: 13, letterSpacing: "0.04em",
+                  }}>📊 Open Predictions →</Link>
+                  <Link href="/quiz" style={{
+                    display: "block", padding: "12px", background: "rgba(255,186,58,0.08)",
+                    border: "1px solid rgba(255,186,58,0.2)", borderRadius: 8,
+                    color: "var(--amber)", fontWeight: 700, fontSize: 13, letterSpacing: "0.04em",
+                  }}>❓ Live Quiz →</Link>
+                </Card>
+
+                {/* Watch links */}
+                <Card style={{ padding: 16 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 12 }}>Watch Live</div>
+                  {[
+                    { name: "JioHotstar", url: "https://www.jiohotstar.com", region: "India" },
+                    { name: "Willow TV", url: "https://www.willow.tv", region: "USA" },
+                    { name: "Sky Sports", url: "https://www.skysports.com", region: "UK" },
+                  ].map(link => (
+                    <a key={link.name} href={link.url} target="_blank" rel="noopener noreferrer" style={{
+                      display: "flex", justifyContent: "space-between", alignItems: "center",
+                      padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,0.06)",
+                    }}>
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>{link.name}</div>
+                        <div style={{ fontSize: 11, color: "var(--muted)" }}>{link.region}</div>
+                      </div>
+                      <span style={{ fontSize: 12, color: "var(--green)", fontWeight: 700 }}>▶ Watch</span>
+                    </a>
+                  ))}
+                </Card>
+              </div>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }

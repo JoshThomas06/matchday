@@ -20,20 +20,20 @@ const Icons = {
   quiz:       <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
 };
 
-const PRIMARY_NAV = [
+type NavItem = { label: string; href: string; icon: React.ReactNode; soon?: boolean; };
+
+const PRIMARY_NAV: NavItem[] = [
   { label: "HOME",       href: "/",            icon: Icons.home },
   { label: "CRICKET",    href: "/dashboard",   icon: Icons.cricket },
   { label: "FOOTBALL",   href: "/football",    icon: Icons.football },
   { label: "WATCH LIVE", href: "/watch",       icon: Icons.watch },
-  { label: "MOMENTS",    href: "/moments",     icon: Icons.moments },
   { label: "PREDICTIONS",href: "/predictions", icon: Icons.predict },
   { label: "QUIZ",       href: "/quiz",        icon: Icons.quiz },
   { label: "STATS",      href: "/stats",       icon: Icons.stats },
 ];
 
-const SECONDARY_NAV = [
+const SECONDARY_NAV: NavItem[] = [
   { label: "MY TEAMS",   href: "/teams",      icon: Icons.teams },
-  { label: "ANALYTICS",  href: "/analytics",  icon: Icons.analytics },
 ];
 
 export default function SideNav() {
@@ -69,7 +69,7 @@ export default function SideNav() {
           const active = isActive(item.href);
           return (
             <Link key={item.href} href={item.href} style={{
-              display: "flex", alignItems: "center", gap: 12,
+              display: "flex", alignItems: "center", gap: 12, justifyContent: "space-between",
               padding: "10px 16px", borderRadius: 8, textDecoration: "none",
               fontFamily: "var(--font)", fontSize: 12, fontWeight: 700,
               letterSpacing: "0.08em", textTransform: "uppercase",
@@ -78,8 +78,13 @@ export default function SideNav() {
               boxShadow: active ? "0 0 12px rgba(0,255,135,0.3)" : "none",
               transition: "all 0.2s",
             }}>
-              <span style={{ flexShrink: 0, display: "flex" }}>{item.icon}</span>
-              {item.label}
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span style={{ flexShrink: 0, display: "flex" }}>{item.icon}</span>
+                {item.label}
+              </div>
+              {item.soon && (
+                <span style={{ fontSize: 9, background: "rgba(255,255,255,0.1)", padding: "2px 6px", borderRadius: 4, color: active ? "#003919" : "var(--green)" }}>SOON</span>
+              )}
             </Link>
           );
         })}
@@ -91,7 +96,7 @@ export default function SideNav() {
           const active = isActive(item.href);
           return (
             <Link key={item.href} href={item.href} style={{
-              display: "flex", alignItems: "center", gap: 12,
+              display: "flex", alignItems: "center", gap: 12, justifyContent: "space-between",
               padding: "10px 16px", borderRadius: 8, textDecoration: "none",
               fontFamily: "var(--font)", fontSize: 12, fontWeight: 700,
               letterSpacing: "0.08em", textTransform: "uppercase",
@@ -99,8 +104,13 @@ export default function SideNav() {
               background: active ? "var(--green)" : "transparent",
               transition: "all 0.2s",
             }}>
-              <span style={{ flexShrink: 0, display: "flex" }}>{item.icon}</span>
-              {item.label}
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <span style={{ flexShrink: 0, display: "flex" }}>{item.icon}</span>
+                {item.label}
+              </div>
+              {item.soon && (
+                <span style={{ fontSize: 9, background: "rgba(255,255,255,0.1)", padding: "2px 6px", borderRadius: 4, color: active ? "#003919" : "var(--green)" }}>SOON</span>
+              )}
             </Link>
           );
         })}

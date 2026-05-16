@@ -1,0 +1,96 @@
+{
+  "polls": [
+    {
+      "id": "poll_seed_1",
+      "matchId": "demo_1",
+      "question": "Who will win the toss?",
+      "options": [
+        "Home Team",
+        "Away Team"
+      ],
+      "votes": {
+        "0": 46,
+        "1": 55
+      },
+      "voters": [
+        "guest_1778961196088_329g43o"
+      ],
+      "createdAt": 1778962297037,
+      "closesAt": 1778962907037,
+      "closed": true,
+      "triggerEvent": "toss"
+    },
+    {
+      "id": "poll_seed_2",
+      "matchId": "demo_1",
+      "question": "Who scores the next goal?",
+      "options": [
+        "Arsenal",
+        "Man City",
+        "No Goal"
+      ],
+      "votes": {
+        "0": 121,
+        "1": 150,
+        "2": 30
+      },
+      "voters": [
+        "guest_1778961196088_329g43o"
+      ],
+      "createdAt": 1778962007037,
+      "closesAt": 1778962337037,
+      "closed": true,
+      "triggerEvent": "goal"
+    },
+    {
+      "id": "poll_seed_3",
+      "matchId": "demo_2",
+      "question": "How many runs in this over?",
+      "options": [
+        "0-4",
+        "5-8",
+        "9-12",
+        "13+"
+      ],
+      "votes": {
+        "0": 10,
+        "1": 50,
+        "2": 30,
+        "3": 5
+      },
+      "voters": [],
+      "createdAt": 1778962257037,
+      "closesAt": 1778962306037,
+      "closed": true,
+      "triggerEvent": "over"
+    }
+  ],
+  "users": {
+    "guest_1778961196088_329g43o": {
+      "userId": "guest_1778961196088_329g43o",
+      "points": 6,
+      "accuracy": 0,
+      "totalPredictions": 2,
+      "correctPredictions": 0,
+      "history": [
+        {
+          "pollId": "poll_seed_1",
+          "question": "Who will win the toss?",
+          "choice": "Home Team",
+          "choiceIndex": 0,
+          "ts": 1778962308179,
+          "matchId": "demo_1"
+        },
+        {
+          "pollId": "poll_seed_2",
+          "question": "Who scores the next goal?",
+          "choice": "Arsenal",
+          "choiceIndex": 0,
+          "ts": 1778962311164,
+          "matchId": "demo_1"
+        }
+      ]
+    }
+  },
+  "pollSeq": 0
+}
