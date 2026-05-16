@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useFootballMatches, useFootballStats } from "@/services/football/api";
+import { calculateFootballAnalytics } from "@/services/football/analytics";
 import { NormalizedFbMatch, TeamStats, StatItem } from "@/lib/normalizers/football";
 
 function Card({ children, style = {} }: { children: React.ReactNode; style?: React.CSSProperties }) {
@@ -110,10 +111,36 @@ export default function AnalyticsPage() {
 
           {statsLoading && <div style={{ height: 220, borderRadius: 12, background: "rgba(255,255,255,0.05)", animation: "pulse-dot 1.5s infinite", marginBottom: 20 }} />}
 
-          {!statsLoading && teamStats.length >= 2 && (
-            <>
-              {/* Possession + key stats */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
+          {!statsLoading && teamStats.length >= 2 ? (() => {
+            const fbAnalytics = calculateFootballAnalytics(teamStats);
+            return (
+              <>
+                {/* Football Analytics Engine */}
+                {fbAnalytics && (
+                  <Card style={{ padding: 24, marginBottom: 20 }}>
+                    <h3 style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 20 }}>Football Intelligence Engine</h3>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
+                      <div style={{ background: "rgba(0,0,0,0.2)", padding: 16, borderRadius: 8, border: "1px solid rgba(255,255,255,0.05)" }}>
+                        <div style={{ fontSize: 28, fontWeight: 700, color: "var(--green)" }}>{fbAnalytics.home.xG} <span style={{fontSize: 14, color: "var(--muted)"}}>- {fbAnalytics.away.xG}</span></div>
+                        <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", marginTop: 4 }}>Expected Goals (xG)</div>
+                      </div>
+                      <div style={{ background: "rgba(0,0,0,0.2)", padding: 16, borderRadius: 8, border: "1px solid rgba(255,255,255,0.05)" }}>
+                        <div style={{ fontSize: 28, fontWeight: 700, color: fbAnalytics.home.attackPressure > 50 ? "var(--green)" : "var(--amber)" }}>{fbAnalytics.home.attackPressure}%</div>
+                        <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", marginTop: 4 }}>Attack Pressure</div>
+                      </div>
+                      <div style={{ background: "rgba(0,0,0,0.2)", padding: 16, borderRadius: 8, border: "1px solid rgba(255,255,255,0.05)" }}>
+                        <div style={{ fontSize: 28, fontWeight: 700, color: fbAnalytics.home.passingEfficiency > 80 ? "var(--green)" : "var(--amber)" }}>{fbAnalytics.home.passingEfficiency}%</div>
+                        <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", marginTop: 4 }}>Pass Efficiency</div>
+                      </div>
+                      <div style={{ background: "rgba(0,0,0,0.2)", padding: 16, borderRadius: 8, border: "1px solid rgba(255,255,255,0.05)" }}>
+                        <div style={{ fontSize: 28, fontWeight: 700, color: "#fff" }}>{fbAnalytics.home.eventMomentum}</div>
+                        <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", marginTop: 4 }}>Match Momentum</div>
+                      </div>
+                    </div>
+                  </Card>
+                )}
+                {/* Possession + key stats */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 20 }}>
                 <Card style={{ padding: 24 }}>
                   <h3 style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 20 }}>Ball Possession</h3>
                   <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
@@ -146,7 +173,7 @@ export default function AnalyticsPage() {
                 </Card>
               </div>
             </>
-          )}
+          )})() : null}
 
           {!statsLoading && teamStats.length < 2 && (
             <Card style={{ padding: "24px", textAlign: "center" }}>

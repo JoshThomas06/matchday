@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cached } from "@/lib/cache";
 
+export const dynamic = "force-dynamic";
+
 const CRICAPI_KEY = process.env.CRICAPI_KEY ?? "";
 const FOOTBALL_KEY = process.env.FOOTBALL_API_KEY ?? "";
 

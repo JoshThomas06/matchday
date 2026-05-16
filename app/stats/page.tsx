@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useFootballStats } from "@/services/football/api";
 import { useCricketMatches } from "@/services/cricket/api";
 import { calculateCricketAnalytics } from "@/services/cricket/analytics";
+import { calculateFootballAnalytics } from "@/services/football/analytics";
 import { TeamStats, StatItem } from "@/lib/normalizers/football";
 
 function Card({ children, style = {} }: { children: React.ReactNode; style?: React.CSSProperties }) {
@@ -185,23 +186,48 @@ function StatsContent() {
               </div>
             </Card>
           );
-        })() : (
-          <>
-            {/* Possession */}
-            <Card style={{ padding: 24 }}>
-              <h3 style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 20 }}>Ball Possession</h3>
-              <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
-                <DonutChart pct={possessionPct} color="var(--green)" label={homeName.toUpperCase().slice(0, 6)} />
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-around" }}>
-                <span style={{ fontSize: 16, fontWeight: 700, color: "var(--green)" }}>● {possessionPct}%</span>
-                <span style={{ fontSize: 16, fontWeight: 700, color: "var(--amber)" }}>● {100 - possessionPct}%</span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-around", marginTop: 6 }}>
-                <span style={{ fontSize: 11, color: "var(--muted)" }}>{homeName}</span>
-                <span style={{ fontSize: 11, color: "var(--muted)" }}>{awayName}</span>
-              </div>
-            </Card>
+        })() : (() => {
+          const fbAnalytics = calculateFootballAnalytics(teamStats);
+          return (
+            <>
+              {fbAnalytics && (
+                <Card style={{ padding: 24, gridColumn: "1 / -1", marginBottom: 0 }}>
+                  <h3 style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 20 }}>Football Intelligence</h3>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
+                    <div style={{ background: "rgba(0,0,0,0.2)", padding: 16, borderRadius: 8, border: "1px solid rgba(255,255,255,0.05)" }}>
+                      <div style={{ fontSize: 28, fontWeight: 700, color: "var(--green)" }}>{fbAnalytics.home.xG} <span style={{fontSize: 14, color: "var(--muted)"}}>- {fbAnalytics.away.xG}</span></div>
+                      <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", marginTop: 4 }}>Expected Goals (xG)</div>
+                    </div>
+                    <div style={{ background: "rgba(0,0,0,0.2)", padding: 16, borderRadius: 8, border: "1px solid rgba(255,255,255,0.05)" }}>
+                      <div style={{ fontSize: 28, fontWeight: 700, color: fbAnalytics.home.attackPressure > 50 ? "var(--green)" : "var(--amber)" }}>{fbAnalytics.home.attackPressure}%</div>
+                      <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", marginTop: 4 }}>Attack Pressure</div>
+                    </div>
+                    <div style={{ background: "rgba(0,0,0,0.2)", padding: 16, borderRadius: 8, border: "1px solid rgba(255,255,255,0.05)" }}>
+                      <div style={{ fontSize: 28, fontWeight: 700, color: fbAnalytics.home.passingEfficiency > 80 ? "var(--green)" : "var(--amber)" }}>{fbAnalytics.home.passingEfficiency}%</div>
+                      <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", marginTop: 4 }}>Pass Efficiency</div>
+                    </div>
+                    <div style={{ background: "rgba(0,0,0,0.2)", padding: 16, borderRadius: 8, border: "1px solid rgba(255,255,255,0.05)" }}>
+                      <div style={{ fontSize: 28, fontWeight: 700, color: "#fff" }}>{fbAnalytics.home.eventMomentum}</div>
+                      <div style={{ fontSize: 11, color: "var(--muted)", textTransform: "uppercase", marginTop: 4 }}>Match Momentum</div>
+                    </div>
+                  </div>
+                </Card>
+              )}
+              {/* Possession */}
+              <Card style={{ padding: 24 }}>
+                <h3 style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 20 }}>Ball Possession</h3>
+                <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+                  <DonutChart pct={possessionPct} color="var(--green)" label={homeName.toUpperCase().slice(0, 6)} />
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-around" }}>
+                  <span style={{ fontSize: 16, fontWeight: 700, color: "var(--green)" }}>● {possessionPct}%</span>
+                  <span style={{ fontSize: 16, fontWeight: 700, color: "var(--amber)" }}>● {100 - possessionPct}%</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-around", marginTop: 6 }}>
+                  <span style={{ fontSize: 11, color: "var(--muted)" }}>{homeName}</span>
+                  <span style={{ fontSize: 11, color: "var(--muted)" }}>{awayName}</span>
+                </div>
+              </Card>
 
             {/* Key stats grid */}
             <Card style={{ padding: 24 }}>
@@ -220,7 +246,7 @@ function StatsContent() {
               </div>
             </Card>
           </>
-        )}
+        )})()}
       </div>
 
       {/* All stats table */}

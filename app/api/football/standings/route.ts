@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { cached } from "@/lib/cache";
 
+export const dynamic = "force-dynamic";
+
 const FOOTBALL_KEY = process.env.FOOTBALL_API_KEY ?? "";
 const HEADERS = {
   "x-rapidapi-host": "api-football-v1.p.rapidapi.com",
