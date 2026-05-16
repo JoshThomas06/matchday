@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&amp;family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-error-container": "#ffdad6",
+            "outline": "#849585",
+            "surface-container-low": "#0d1c2d",
+            "surface-container-high": "#1c2b3c",
+            "on-surface-variant": "#b9cbb9",
+            "surface-container-highest": "#273647",
+            "surface-dim": "#051424",
+            "tertiary-fixed-dim": "#c3c6d7",
+            "secondary-fixed-dim": "#ffba3a",
+            "on-primary-container": "#007138",
+            "on-secondary-fixed": "#281900",
+            "surface-container": "#122131",
+            "surface-tint": "#00e478",
+            "primary": "#f1ffef",
+            "secondary-fixed": "#ffdead",
+            "on-primary-fixed-variant": "#005227",
+            "on-tertiary-container": "#5d6170",
+            "tertiary-fixed": "#dfe2f3",
+            "surface-bright": "#2c3a4c",
+            "tertiary-container": "#dbddef",
+            "inverse-on-surface": "#233143",
+            "on-secondary-container": "#4e3400",
+            "secondary": "#ffba3a",
+            "on-error": "#690005",
+            "on-tertiary-fixed": "#171b28",
+            "surface-container-lowest": "#010f1f",
+            "on-tertiary-fixed-variant": "#434654",
+            "error": "#ffb4ab",
+            "secondary-container": "#d89700",
+            "outline-variant": "#3b4b3d",
+            "error-container": "#93000a",
+            "on-secondary-fixed-variant": "#604100",
+            "on-secondary": "#432c00",
+            "on-background": "#d4e4fa",
+            "primary-fixed": "#60ff98",
+            "primary-fixed-dim": "#00e478",
+            "background": "#051424",
+            "surface": "#051424",
+            "on-tertiary": "#2c303d",
+            "primary-container": "#00ff87",
+            "tertiary": "#fcfaff",
+            "on-surface": "#d4e4fa",
+            "inverse-primary": "#006d36",
+            "inverse-surface": "#d4e4fa",
+            "on-primary-fixed": "#00210c",
+            "on-primary": "#003919",
+            "surface-variant": "#273647"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter": "16px",
+            "stack-md": "16px",
+            "margin-mobile": "16px",
+            "unit": "4px",
+            "stack-lg": "24px",
+            "margin-desktop": "24px",
+            "stack-sm": "8px"
+          },
+          "fontFamily": {
+            "body-sm": ["Inter"],
+            "headline-lg-mobile": ["Archivo Narrow"],
+            "display-score": ["Archivo Narrow"],
+            "body-lg": ["Inter"],
+            "headline-lg": ["Archivo Narrow"],
+            "label-caps": ["Inter"],
+            "headline-md": ["Archivo Narrow"]
+          },
+          "fontSize": {
+            "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+            "headline-lg-mobile": ["28px", {"lineHeight": "32px", "fontWeight": "700"}],
+            "display-score": ["48px", {"lineHeight": "48px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+            "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+            "headline-lg": ["32px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "700"}],
+            "headline-md": ["24px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .glass-card {
+      background: rgba(39, 54, 71, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .pulse-glow {
+      box-shadow: 0 0 12px rgba(0, 228, 120, 0.4);
+    }
+    .live-pulse {
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.1); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-lg min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-xl border-b border-white/10 shadow-[0_0_15px_rgba(0,228,120,0.1)]">
+<div class="flex items-center justify-between px-gutter w-full max-w-[390px] mx-auto h-16">
+<div class="flex items-center gap-stack-sm">
+<span class="material-symbols-outlined text-primary-fixed" style="font-variation-settings: 'FILL' 1;">sports_soccer</span>
+<h1 class="font-headline-md text-headline-md tracking-tight text-primary-fixed">ARS 2-1 MCI • 67'</h1>
+</div>
+<div class="flex items-center gap-stack-sm">
+<div class="flex items-center gap-1.5 bg-error/20 px-2 py-0.5 rounded-full border border-error/30">
+<div class="w-2 h-2 bg-error rounded-full live-pulse"></div>
+<span class="font-label-caps text-[10px] text-error">LIVE</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant hover:opacity-80 transition-opacity">sensors</span>
+</div>
+</div>
+</header>
+<main class="mt-20 px-gutter max-w-[390px] mx-auto space-y-stack-lg">
+<!-- Score Visualization Section -->
+<section class="grid grid-cols-2 gap-stack-md py-stack-md">
+<div class="flex flex-col items-center gap-stack-sm">
+<div class="w-16 h-16 rounded-full glass-card flex items-center justify-center overflow-hidden border-2 border-primary-fixed/30">
+<img alt="Arsenal" class="w-12 h-12" data-alt="A professional high-resolution football club crest for Arsenal FC, featuring its iconic cannon emblem in vibrant red and gold. The logo is displayed on a sleek, dark metallic surface with cinematic lighting reflecting off its polished edges. The style is hyper-modern and sporty, tailored for a premium live sports broadcasting application interface with deep navy backgrounds." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnkVDrtsIzS_XObJIcnKClum-gyssXqYgdtt08vnbm-YvliLg598KljmfObN70ZS2gH7P9wgCs4U-hGiLieoTp5Zs5x-3OGfrqd0MFhbDejkZl-8bxpmwGgsu68cBYn2XPNnkT2th5p_jaVIGw9vh3ljcrMSbebNVmjtwZeJ55GJP0nR9Pm54cESc38u0hQs1zUki-08lXvi1yTmebLW7Z1-zzwajMcxNeUc9rm1SdZbB52KKdYdiXwJwTtJ5WYEMq_DxXdeuYfkU"/>
+</div>
+<span class="font-label-caps text-on-surface">Arsenal</span>
+</div>
+<div class="flex flex-col items-center gap-stack-sm">
+<div class="w-16 h-16 rounded-full glass-card flex items-center justify-center overflow-hidden border-2 border-outline/30">
+<img alt="Man City" class="w-12 h-12" data-alt="A professional high-resolution football club crest for Manchester City, showcasing the circular ship and rose emblem in sky blue and white. The badge is presented on a textured dark background with sharp highlights that emphasize its modern, clean lines. The overall aesthetic is clean and high-tech, fitting for a elite sports data dashboard with neon accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuACwQq6VBhxz72Qb-rsId7mhivfAEQnp6RBF_P2SuztG-5DO6r16-xeVDaME9dsLAJJuvgZKcZc8_Xoe7D-I3cQ3KdhGnK_GoWY7mAc8IqsUl9TPCZWnOOB8t8hN6p9YJ9vcxjuah6ZvnJv2MhUEt9fXEQbQotMetGntElL5tO7tPnenAcbQcCCyZFxwa-bKRh1xvitN4uT0xGkog4xuLpfqbA5KWW9fXyFvvoWo3rbieRsH-HI6qxGnw_zh5F8Ms5OpkdXWe9vsnw"/>
+</div>
+<span class="font-label-caps text-on-surface">Man City</span>
+</div>
+</section>
+<!-- Key Moments Timeline -->
+<section class="space-y-stack-sm">
+<div class="flex items-center justify-between">
+<h2 class="font-label-caps text-outline">Key Moments</h2>
+<span class="text-primary-fixed text-xs font-label-caps">View Full Feed</span>
+</div>
+<div class="flex gap-stack-md overflow-x-auto hide-scrollbar py-2 -mx-gutter px-gutter">
+<!-- Event 1 -->
+<div class="flex-shrink-0 w-32 glass-card p-stack-sm rounded-xl space-y-1 border-l-2 border-l-primary-fixed">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-primary-fixed">23'</span>
+<span class="material-symbols-outlined text-primary-fixed text-lg" style="font-variation-settings: 'FILL' 1;">sports_soccer</span>
+</div>
+<p class="font-headline-md text-sm truncate">Saka</p>
+<p class="font-body-sm text-[10px] text-outline">Goal</p>
+</div>
+<!-- Event 2 -->
+<div class="flex-shrink-0 w-32 glass-card p-stack-sm rounded-xl space-y-1 border-l-2 border-l-secondary">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-secondary">41'</span>
+<span class="material-symbols-outlined text-secondary text-lg" style="font-variation-settings: 'FILL' 1;">style</span>
+</div>
+<p class="font-headline-md text-sm truncate">Rodri</p>
+<p class="font-body-sm text-[10px] text-outline">Yellow Card</p>
+</div>
+<!-- Event 3 -->
+<div class="flex-shrink-0 w-32 glass-card p-stack-sm rounded-xl space-y-1 border-l-2 border-l-primary-fixed">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-primary-fixed">58'</span>
+<span class="material-symbols-outlined text-primary-fixed text-lg" style="font-variation-settings: 'FILL' 1;">sports_soccer</span>
+</div>
+<p class="font-headline-md text-sm truncate">Havertz</p>
+<p class="font-body-sm text-[10px] text-outline">Goal</p>
+</div>
+<!-- Event 4 -->
+<div class="flex-shrink-0 w-32 glass-card p-stack-sm rounded-xl space-y-1 border-l-2 border-l-primary-fixed">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-primary-fixed">63'</span>
+<span class="material-symbols-outlined text-primary-fixed text-lg" style="font-variation-settings: 'FILL' 1;">sports_soccer</span>
+</div>
+<p class="font-headline-md text-sm truncate">Haaland</p>
+<p class="font-body-sm text-[10px] text-outline">Goal</p>
+</div>
+</div>
+</section>
+<!-- Fan Pulse Section -->
+<section class="glass-card p-stack-md rounded-xl space-y-stack-md relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-fixed to-secondary"></div>
+<div class="flex items-center justify-between">
+<h2 class="font-label-caps text-primary-fixed flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">bolt</span>
+          Fan Pulse
+        </h2>
+<span class="text-[10px] text-outline font-label-caps">12.4k Voting</span>
+</div>
+<div class="space-y-stack-sm">
+<div class="flex justify-between font-display-score text-2xl">
+<span class="text-primary-fixed">61%</span>
+<span class="text-secondary">39%</span>
+</div>
+<div class="flex h-3 w-full rounded-full bg-surface-container overflow-hidden">
+<div class="h-full bg-primary-fixed shadow-[0_0_10px_rgba(0,228,120,0.6)]" style="width: 61%"></div>
+<div class="h-full bg-secondary opacity-80" style="width: 39%"></div>
+</div>
+<div class="flex justify-between text-outline font-label-caps text-[10px]">
+<span>Arsenal Fans</span>
+<span>City Fans</span>
+</div>
+</div>
+</section>
+<!-- Predict Next Goal Card -->
+<section class="glass-card p-stack-md rounded-xl space-y-stack-md border-t border-white/5">
+<div class="flex items-center justify-between">
+<div class="space-y-0.5">
+<h2 class="font-headline-md text-lg">Next Goal Scorer?</h2>
+<div class="flex items-center gap-1.5 text-secondary">
+<span class="material-symbols-outlined text-sm">schedule</span>
+<span class="text-[10px] font-label-caps uppercase tracking-widest">Poll closes in 1:45</span>
+</div>
+</div>
+<div class="bg-primary-fixed/10 p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary-fixed">query_stats</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-stack-md">
+<button class="flex flex-col items-center gap-stack-sm p-stack-md glass-card rounded-xl hover:border-primary-fixed transition-colors group active:scale-95 duration-150">
+<div class="w-10 h-10 rounded-full bg-primary-fixed/20 flex items-center justify-center group-hover:bg-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-primary-fixed group-hover:text-on-primary-fixed">add_circle</span>
+</div>
+<span class="font-label-caps text-xs">Arsenal</span>
+</button>
+<button class="flex flex-col items-center gap-stack-sm p-stack-md glass-card rounded-xl hover:border-secondary transition-colors group active:scale-95 duration-150">
+<div class="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center group-hover:bg-secondary transition-colors">
+<span class="material-symbols-outlined text-secondary group-hover:text-on-secondary-fixed">add_circle</span>
+</div>
+<span class="font-label-caps text-xs">Man City</span>
+</button>
+</div>
+<button class="w-full py-stack-md bg-primary-fixed text-on-primary-fixed font-label-caps rounded-xl shadow-[0_0_20px_rgba(0,228,120,0.3)] active:scale-95 transition-transform">
+        Lock Prediction
+      </button>
+</section>
+<!-- Match Stats Quick View (Bento Style) -->
+<section class="grid grid-cols-2 gap-stack-md">
+<div class="glass-card p-stack-md rounded-xl space-y-stack-sm">
+<span class="font-label-caps text-outline text-[10px]">Possession</span>
+<div class="flex items-end justify-between">
+<span class="font-display-score text-2xl text-on-surface">42<span class="text-sm">%</span></span>
+<div class="h-12 w-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="w-full bg-primary-fixed" style="height: 42%"></div>
+</div>
+</div>
+</div>
+<div class="glass-card p-stack-md rounded-xl space-y-stack-sm">
+<span class="font-label-caps text-outline text-[10px]">Total Shots</span>
+<div class="flex items-end justify-between">
+<span class="font-display-score text-2xl text-on-surface">14</span>
+<div class="flex gap-0.5">
+<div class="w-1.5 h-6 bg-primary-fixed rounded-full"></div>
+<div class="w-1.5 h-10 bg-primary-fixed rounded-full"></div>
+<div class="w-1.5 h-8 bg-primary-fixed rounded-full"></div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface/60 backdrop-blur-xl rounded-t-xl border-t border-white/10 shadow-[0_-4px_20px_rgba(0,0,0,0.4)]">
+<div class="flex justify-around items-center w-full max-w-[390px] mx-auto h-20 pb-safe px-2">
+<!-- Home Active -->
+<a class="flex flex-col items-center justify-center text-primary-fixed drop-shadow-[0_0_8px_rgba(0,228,120,0.6)] Active: scale-110 duration-200 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">movie_filter</span>
+<span class="font-label-caps text-label-caps">Moments</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">query_stats</span>
+<span class="font-label-caps text-label-caps">Predict</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-label-caps text-label-caps">Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label-caps text-label-caps">Stats</span>
+</a>
+</div>
+</nav>
+</body></html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&amp;family=Inter:wght@400;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#ffdad6",
+                    "outline": "#849585",
+                    "surface-container-low": "#0d1c2d",
+                    "surface-container-high": "#1c2b3c",
+                    "on-surface-variant": "#b9cbb9",
+                    "surface-container-highest": "#273647",
+                    "surface-dim": "#051424",
+                    "tertiary-fixed-dim": "#c3c6d7",
+                    "secondary-fixed-dim": "#ffba3a",
+                    "on-primary-container": "#007138",
+                    "on-secondary-fixed": "#281900",
+                    "surface-container": "#122131",
+                    "surface-tint": "#00e478",
+                    "primary": "#f1ffef",
+                    "secondary-fixed": "#ffdead",
+                    "on-primary-fixed-variant": "#005227",
+                    "on-tertiary-container": "#5d6170",
+                    "tertiary-fixed": "#dfe2f3",
+                    "surface-bright": "#2c3a4c",
+                    "tertiary-container": "#dbddef",
+                    "inverse-on-surface": "#233143",
+                    "on-secondary-container": "#4e3400",
+                    "secondary": "#ffba3a",
+                    "on-error": "#690005",
+                    "on-tertiary-fixed": "#171b28",
+                    "surface-container-lowest": "#010f1f",
+                    "on-tertiary-fixed-variant": "#434654",
+                    "error": "#ffb4ab",
+                    "secondary-container": "#d89700",
+                    "outline-variant": "#3b4b3d",
+                    "error-container": "#93000a",
+                    "on-secondary-fixed-variant": "#604100",
+                    "on-secondary": "#432c00",
+                    "on-background": "#d4e4fa",
+                    "primary-fixed": "#60ff98",
+                    "primary-fixed-dim": "#00e478",
+                    "background": "#051424",
+                    "surface": "#051424",
+                    "on-tertiary": "#2c303d",
+                    "primary-container": "#00ff87",
+                    "tertiary": "#fcfaff",
+                    "on-surface": "#d4e4fa",
+                    "inverse-primary": "#006d36",
+                    "inverse-surface": "#d4e4fa",
+                    "on-primary-fixed": "#00210c",
+                    "on-primary": "#003919",
+                    "surface-variant": "#273647"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "stack-md": "16px",
+                    "margin-mobile": "16px",
+                    "unit": "4px",
+                    "stack-lg": "24px",
+                    "margin-desktop": "24px",
+                    "stack-sm": "8px"
+            },
+            "fontFamily": {
+                    "body-sm": ["Inter"],
+                    "headline-lg-mobile": ["Archivo Narrow"],
+                    "display-score": ["Archivo Narrow"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Archivo Narrow"],
+                    "label-caps": ["Inter"],
+                    "headline-md": ["Archivo Narrow"]
+            },
+            "fontSize": {
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "display-score": ["48px", {"lineHeight": "48px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(39, 54, 71, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow-green {
+            box-shadow: 0 0 15px rgba(0, 228, 120, 0.3);
+        }
+        .pulse-glow {
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0%, 100% { box-shadow: 0 0 15px rgba(0, 228, 120, 0.6); }
+            50% { box-shadow: 0 0 30px rgba(0, 228, 120, 0.8); }
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-lg min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/60 dark:bg-surface/60 backdrop-blur-xl border-b border-white/10 shadow-[0_0_15px_rgba(0,228,120,0.1)]">
+<div class="flex items-center justify-between px-gutter w-full max-w-[390px] mx-auto h-16">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-fixed-dim" data-icon="sports_soccer">sports_soccer</span>
+<h1 class="font-headline-md text-headline-md tracking-tight text-primary dark:text-primary-fixed">ARS 2-1 MCI • 67'</h1>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-primary-fixed-dim" data-icon="sensors">sensors</span>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-20 px-4 max-w-[390px] mx-auto flex flex-col gap-stack-lg">
+<!-- Feed Item: Goal (Saka) -->
+<article class="glass-card rounded-xl overflow-hidden flex flex-col">
+<div class="relative h-48 w-full bg-surface-container">
+<img alt="Moment clip" class="w-full h-full object-cover opacity-80" data-alt="A cinematic low-angle shot of a professional soccer player in a red kit celebrating a goal under intense stadium floodlights. The background shows a blurred, cheering crowd in a high-contrast dark stadium environment. Electric green highlights and vibrant glows accentuate the dramatic athletic moment, consistent with a premium sports broadcast aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmfQa2T3K2PW63KrB1qNX2K6o1VVNJlf1lbVjkUIzXmeUBDWw6a_jEnlu74LRYs7KRBaT_G1xG_AHudSnjQyjlbFp8pdoi8yF3hqSq_C2ExluSxmbKuO6YCJPNXo5fvQXkz0wvGNuY5S6iRGR4avKysJvUUdLXs0ZAOEWzSmKEKQxDToJKerDSZhmWJWmBANRNN1NpZNQ7bCNRAUGpmBhF3G2DqrNFnZR-frQVABkPgYdzciuVZT63ioar8zW3qxiTl0JW7Y02qzw"/>
+<div class="absolute top-3 left-3 bg-primary-container text-on-primary-container px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">sports_soccer</span>
+<span class="font-label-caps text-label-caps">GOAL • 23'</span>
+</div>
+</div>
+<div class="p-4 space-y-2">
+<div class="flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-secondary">Saka</h3>
+<span class="font-label-caps text-label-caps text-outline">ARSENAL</span>
+</div>
+<p class="text-body-sm text-on-surface-variant italic">"Clinical finish into the bottom corner"</p>
+<div class="pt-4 flex gap-2 overflow-x-auto">
+<button class="bg-surface-container-high px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-white/5 hover:bg-surface-container-highest transition-colors">
+<span>🔥</span><span class="font-label-caps text-label-caps">1.2k</span>
+</button>
+<button class="bg-surface-container-high px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-white/5 hover:bg-surface-container-highest transition-colors">
+<span>❤️</span><span class="font-label-caps text-label-caps">854</span>
+</button>
+<button class="bg-surface-container-high px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-white/5 hover:bg-surface-container-highest transition-colors">
+<span>😱</span><span class="font-label-caps text-label-caps">421</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Feed Item: Yellow Card (Rodri) -->
+<article class="glass-card rounded-xl overflow-hidden flex flex-col">
+<div class="p-4 space-y-2">
+<div class="flex items-center gap-3">
+<div class="w-8 h-12 bg-[#FFD700] rounded-sm shadow-[0_0_10px_rgba(255,215,0,0.4)]"></div>
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Rodri • 41'</h3>
+<p class="font-label-caps text-label-caps text-outline">MANCHESTER CITY</p>
+</div>
+</div>
+<p class="text-body-sm text-on-surface-variant italic">"Tactical foul to stop the break"</p>
+<div class="pt-2 flex gap-2">
+<button class="bg-surface-container-high px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-white/5">
+<span>👏</span><span class="font-label-caps text-label-caps">128</span>
+</button>
+<button class="bg-surface-container-high px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-white/5">
+<span>😱</span><span class="font-label-caps text-label-caps">56</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Feed Item: Goal (Havertz) -->
+<article class="glass-card rounded-xl overflow-hidden flex flex-col border-primary/20 shadow-[0_0_20px_rgba(0,228,120,0.05)]">
+<div class="relative h-48 w-full bg-surface-container">
+<img alt="Moment clip" class="w-full h-full object-cover opacity-80" data-alt="Dynamic shot of a powerful header during a soccer corner kick. The ball is frozen in mid-air against a backdrop of stadium lights and night sky. The scene is rendered with deep blues and blacks, highlighted by neon electric green pulses and high-contrast lighting to create a cinematic and urgent sports atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBelJmhK51_ZQBV-XzKetjALjSKeYXuw0jGAzrEY_icXtDCPYLt1xNetPLKr0x_Af_I_QiTbjvk0IC5ckRC_7CZVpIZT1J-gNdEkpc9t_D3cYNjkjiR6mgc0c3agQJI4CG2ERDRbrPVJ-j6fnryYssRf-1jxuj-bdcX67a9ucRuUR_wnLkJFgICoPXRwYuE2ZyQ7T3Ux1NqF-47jYLOuM6dD0QL3DbUZWHTpB_QtRqpLYZcMmXhrOAZTmpfxdgKo9vRDMyfdWA2gNk"/>
+<div class="absolute top-3 left-3 bg-primary-container text-on-primary-container px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">sports_soccer</span>
+<span class="font-label-caps text-label-caps">GOAL • 58'</span>
+</div>
+</div>
+<div class="p-4 space-y-2">
+<div class="flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-secondary">Havertz</h3>
+<span class="font-label-caps text-label-caps text-outline">ARSENAL</span>
+</div>
+<p class="text-body-sm text-on-surface-variant italic">"Powerful header from a corner"</p>
+<div class="pt-4 flex gap-2">
+<button class="bg-surface-container-high px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-white/5">
+<span>🔥</span><span class="font-label-caps text-label-caps">2.4k</span>
+</button>
+<button class="bg-surface-container-high px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-white/5">
+<span>👏</span><span class="font-label-caps text-label-caps">1.1k</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Feed Item: Goal (Haaland) -->
+<article class="glass-card rounded-xl overflow-hidden flex flex-col">
+<div class="relative h-48 w-full bg-surface-container">
+<img alt="Moment clip" class="w-full h-full object-cover opacity-80" data-alt="An intense action shot of a world-class striker sliding to tap the ball into the back of the net at the far post. The motion is blurred to convey speed, while the focus remains sharp on the player's concentrated expression. The lighting is cold and modern, with deep shadows and glowing electric green accents framing the goal frame." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAldTAo_GhESEtSSQeGlYTszelM_HIB40S7BGYI7qUQWy7xU_MtYpcwL0RFnr2meQuhxiHqyNvX6R0rmbRq7HC4gR0kZibUTwy9aUnVUWDOwdqlGOCTalfHPYAw1BqxWjaJFJCNTFbKdeH7jFs8IZ8LRisOpMkV4G6nxZ1ypM2P1_F-FaM4CeMIEPZxDvflb3YXHhdDNbDByNsQtEuCxnby0Wj6hPm4bwifBbQS8-MKS9_TEGQA85BKoVZcJm1j-g04jTacg7h67Tg"/>
+<div class="absolute top-3 left-3 bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">sports_soccer</span>
+<span class="font-label-caps text-label-caps">GOAL • 63'</span>
+</div>
+</div>
+<div class="p-4 space-y-2">
+<div class="flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-secondary">Haaland</h3>
+<span class="font-label-caps text-label-caps text-outline">MAN CITY</span>
+</div>
+<p class="text-body-sm text-on-surface-variant italic">"Classic poaching finish at the back post"</p>
+<div class="pt-4 flex gap-2">
+<button class="bg-surface-container-high px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-white/5">
+<span>🔥</span><span class="font-label-caps text-label-caps">3.1k</span>
+</button>
+<button class="bg-surface-container-high px-3 py-1.5 rounded-full flex items-center gap-1.5 border border-white/5">
+<span>😱</span><span class="font-label-caps text-label-caps">942</span>
+</button>
+</div>
+</div>
+</article>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-6 bg-primary-container text-on-primary-container px-6 py-3 rounded-full flex items-center gap-2 font-label-caps text-label-caps pulse-glow z-40 active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_reaction</span>
+        React to this moment
+    </button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface/60 dark:bg-surface/60 backdrop-blur-xl rounded-t-xl border-t border-white/10 shadow-[0_-4px_20px_rgba(0,0,0,0.4)]">
+<div class="flex justify-around items-center w-full max-w-[390px] mx-auto h-20 pb-safe px-2">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</a>
+<!-- Moments (Active) -->
+<a class="flex flex-col items-center justify-center text-primary-fixed drop-shadow-[0_0_8px_rgba(0,228,120,0.6)] active:scale-110 duration-200 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="movie_filter" style="font-variation-settings: 'FILL' 1;">movie_filter</span>
+<span class="font-label-caps text-label-caps">Moments</span>
+</a>
+<!-- Predict -->
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
+<span class="font-label-caps text-label-caps">Predict</span>
+</a>
+<!-- Chat -->
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+<span class="font-label-caps text-label-caps">Chat</span>
+</a>
+<!-- Stats -->
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-label-caps text-label-caps">Stats</span>
+</a>
+</div>
+</nav>
+</body></html>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&amp;family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed": "#60ff98",
+                    "background": "#051424",
+                    "on-tertiary-fixed-variant": "#434654",
+                    "secondary-container": "#d89700",
+                    "surface-container-low": "#0d1c2d",
+                    "surface-tint": "#00e478",
+                    "on-tertiary-container": "#5d6170",
+                    "tertiary-fixed-dim": "#c3c6d7",
+                    "inverse-surface": "#d4e4fa",
+                    "on-secondary-container": "#4e3400",
+                    "error-container": "#93000a",
+                    "on-error": "#690005",
+                    "on-secondary-fixed-variant": "#604100",
+                    "secondary-fixed-dim": "#ffba3a",
+                    "secondary-fixed": "#ffdead",
+                    "on-primary-container": "#007138",
+                    "on-secondary": "#432c00",
+                    "primary-fixed-dim": "#00e478",
+                    "surface-container-highest": "#273647",
+                    "on-surface": "#d4e4fa",
+                    "surface-container-lowest": "#010f1f",
+                    "surface-container-high": "#1c2b3c",
+                    "on-background": "#d4e4fa",
+                    "inverse-primary": "#006d36",
+                    "tertiary-container": "#dbddef",
+                    "on-primary-fixed-variant": "#005227",
+                    "secondary": "#ffba3a",
+                    "primary-container": "#00ff87",
+                    "outline": "#849585",
+                    "error": "#ffb4ab",
+                    "on-secondary-fixed": "#281900",
+                    "on-primary-fixed": "#00210c",
+                    "tertiary": "#fcfaff",
+                    "surface-variant": "#273647",
+                    "surface-dim": "#051424",
+                    "on-tertiary-fixed": "#171b28",
+                    "surface-bright": "#2c3a4c",
+                    "tertiary-fixed": "#dfe2f3",
+                    "primary": "#f1ffef",
+                    "inverse-on-surface": "#233143",
+                    "outline-variant": "#3b4b3d",
+                    "on-primary": "#003919",
+                    "on-error-container": "#ffdad6",
+                    "surface-container": "#122131",
+                    "surface": "#051424",
+                    "on-surface-variant": "#b9cbb9",
+                    "on-tertiary": "#2c303d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "stack-sm": "8px",
+                    "gutter": "16px",
+                    "stack-md": "16px",
+                    "unit": "4px",
+                    "stack-lg": "24px",
+                    "margin-desktop": "24px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Archivo Narrow"],
+                    "headline-lg-mobile": ["Archivo Narrow"],
+                    "label-caps": ["Inter"],
+                    "headline-lg": ["Archivo Narrow"],
+                    "display-score": ["Archivo Narrow"],
+                    "body-sm": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-score": ["48px", {"lineHeight": "48px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(18, 33, 49, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .live-pulse {
+            position: relative;
+        }
+        .live-pulse::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: #00ff87;
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-lg text-body-lg">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-xl border-b border-outline-variant/10 shadow-[0_0_15px_rgba(0,228,120,0.1)] flex justify-between items-center px-margin-desktop h-16 w-full max-w-full">
+<div class="flex items-center gap-stack-md">
+<span class="font-headline-lg text-headline-lg font-black text-primary tracking-tighter">MATCHDAY</span>
+<div class="hidden md:flex gap-stack-lg ml-8">
+<a class="text-on-surface-variant hover:text-primary-fixed transition-colors duration-200 cursor-pointer active:scale-95" href="#">Scores</a>
+<a class="text-on-surface-variant hover:text-primary-fixed transition-colors duration-200 cursor-pointer active:scale-95" href="#">News</a>
+<a class="text-primary border-b-2 border-primary-container pb-1 transition-colors duration-200 cursor-pointer active:scale-95" href="#">Watch Live</a>
+</div>
+</div>
+<div class="flex items-center gap-stack-md">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary-fixed transition-colors">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary-fixed transition-colors">settings</span>
+<div class="flex items-center gap-unit cursor-pointer group">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="A high-quality studio portrait of a modern digital professional user avatar. The lighting is soft and cinematic, reflecting a cool blue and electric green ambient glow consistent with a dark sports dashboard interface. The background is a clean, dark navy texture that emphasizes the subject's friendly expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9ZQ5w1vowDI_bnpTuc7PRYg7Lb741w2-9PFBDNJRuLX0i67FBXQfu97Ysf1P7Pp9vZRCfbd02Br3t1nsX1hO_uLt1kkZhwBF-1a5Edg9LkF1qfmj_e1s1R-Pve8-JXJxG3iNbpvNwFh9JpwO0uFji8kLOwTZF_ebJcTWpX4aQN9xx7zqTuvCkdx2pAb-T2H6eStzpvGzI-B_gnOjwlPGZ_2sslx-7Iz9QDheBbTWaAp04drUJJhi5OiIlNhf4TjgLFj1Wnju54l8"/>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface ml-2">Profile</span>
+</div>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 z-40 bg-surface-container/60 backdrop-blur-2xl border-r border-outline-variant/10 shadow-2xl flex flex-col p-gutter gap-stack-md hidden md:flex pt-20">
+<div class="mb-gutter">
+<h1 class="text-primary font-headline-lg text-headline-lg italic">MATCHDAY</h1>
+<p class="text-on-surface-variant font-label-caps text-label-caps opacity-70">Live Dashboard</p>
+</div>
+<nav class="flex flex-col gap-unit">
+<div class="flex items-center p-stack-md gap-stack-md text-on-surface-variant hover:bg-surface-variant/30 rounded-lg transition-transform duration-200 hover:translate-x-1 cursor-pointer">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps uppercase">Home</span>
+</div>
+<div class="flex items-center p-stack-md gap-stack-md text-on-surface-variant hover:bg-surface-variant/30 rounded-lg transition-transform duration-200 hover:translate-x-1 cursor-pointer">
+<span class="material-symbols-outlined">sports_soccer</span>
+<span class="font-label-caps text-label-caps uppercase">Football</span>
+</div>
+<div class="flex items-center p-stack-md gap-stack-md text-on-surface-variant hover:bg-surface-variant/30 rounded-lg transition-transform duration-200 hover:translate-x-1 cursor-pointer">
+<span class="material-symbols-outlined">sports_cricket</span>
+<span class="font-label-caps text-label-caps uppercase">Cricket</span>
+</div>
+<div class="flex items-center p-stack-md gap-stack-md bg-primary-container text-on-primary-container rounded-lg font-bold shadow-[0_0_10px_rgba(0,255,135,0.3)] transition-transform duration-200 hover:translate-x-1 cursor-pointer">
+<span class="material-symbols-outlined">sensors</span>
+<span class="font-label-caps text-label-caps uppercase">Live Events</span>
+</div>
+<div class="flex items-center p-stack-md gap-stack-md text-on-surface-variant hover:bg-surface-variant/30 rounded-lg transition-transform duration-200 hover:translate-x-1 cursor-pointer">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-caps text-label-caps uppercase">My Teams</span>
+</div>
+<div class="flex items-center p-stack-md gap-stack-md text-on-surface-variant hover:bg-surface-variant/30 rounded-lg transition-transform duration-200 hover:translate-x-1 cursor-pointer">
+<span class="material-symbols-outlined">monitoring</span>
+<span class="font-label-caps text-label-caps uppercase">Analytics</span>
+</div>
+</nav>
+<div class="mt-auto flex flex-col gap-unit">
+<button class="bg-primary-container text-on-primary-container font-label-caps text-label-caps py-stack-md rounded-lg mb-gutter shadow-[0_0_15px_rgba(0,255,135,0.2)] hover:brightness-110 active:scale-95 transition-all uppercase">Join Live Chat</button>
+<div class="flex items-center p-stack-md gap-stack-md text-on-surface-variant hover:bg-surface-variant/30 rounded-lg cursor-pointer">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-caps text-label-caps uppercase">Help</span>
+</div>
+<div class="flex items-center p-stack-md gap-stack-md text-on-surface-variant hover:bg-surface-variant/30 rounded-lg cursor-pointer">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-caps text-label-caps uppercase">Logout</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 pt-20 px-margin-desktop min-h-screen pb-20">
+<!-- Hero Section -->
+<section class="relative w-full h-[480px] rounded-xl overflow-hidden glass-card mb-stack-lg group">
+<div class="absolute inset-0 bg-gradient-to-r from-background via-background/40 to-transparent z-10"></div>
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="A wide cinematic shot of a massive cricket stadium packed with fans under bright floodlights. The field is lush green, and the atmosphere is electric with a hazy, high-octane stadium glow. The color palette features deep navy night skies contrasted with vibrant electric green lighting, creating a premium broadcast control room feeling." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAusTRIZdJUg3omxyarS35Uv4WF775FDjGRK_irzGvRPTu92IUQ4N1u4CSADwXKp17Rwh0gMky4W8vsdEZ3D9e8xVC5JFef67EnUA-6vOyr6L79XKyBjp4TPIcPqSzGFO6n1sKwT3qrqVjdJYDXEXosOxTQGc7z_bqonjlQAtLUpkHHJ49p-sbhhYTJXJrhkdzPp30vyt0zHlw0EWonpxkStBba6O0I8ccPi_Q1cW9O1C96dQbXOOnLx5yBQOPOc-Qb1G4ZiI2niD8"/>
+<div class="absolute inset-0 z-20 flex flex-col justify-center px-margin-desktop max-w-2xl gap-stack-md">
+<div class="flex items-center gap-stack-sm mb-unit">
+<span class="inline-flex items-center px-stack-md py-unit bg-error-container text-on-error-container rounded-full font-label-caps text-label-caps uppercase">
+<span class="w-2 h-2 rounded-full bg-error mr-2 animate-pulse"></span>
+                        Live Now
+                    </span>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest bg-surface-container-high px-stack-md py-unit rounded-full">IPL 2024 • MATCH 45</span>
+</div>
+<h2 class="font-display-score text-display-score text-primary leading-tight uppercase">Chennai Super Kings <span class="text-secondary">vs</span> Mumbai Indians</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg">The greatest rivalry in IPL history continues. Watch the legendary MS Dhoni take on the formidable Hardik Pandya in this high-stakes clash at the Chepauk.</p>
+<div class="flex items-center gap-stack-md mt-stack-md">
+<button class="bg-primary-container text-on-primary-container px-stack-lg py-stack-md rounded-lg font-headline-md text-headline-md flex items-center gap-stack-md hover:scale-105 active:scale-95 transition-all shadow-[0_0_20px_rgba(0,255,135,0.4)]">
+                        Watch on JioCinema
+                        <span class="material-symbols-outlined">play_circle</span>
+</button>
+<button class="glass-card text-on-surface px-stack-lg py-stack-md rounded-lg font-headline-md text-headline-md flex items-center gap-stack-md hover:bg-surface-variant/40 transition-all">
+                        Match Info
+                    </button>
+</div>
+</div>
+<!-- Regional Availability Notice -->
+<div class="absolute bottom-margin-desktop left-margin-desktop z-30 flex items-center gap-unit text-on-surface-variant bg-surface-container-lowest/80 backdrop-blur-md px-stack-md py-stack-sm rounded-lg border border-outline-variant/30">
+<span class="material-symbols-outlined text-primary-fixed text-body-sm">location_on</span>
+<p class="font-body-sm text-body-sm">India: Stream for free on JioCinema</p>
+</div>
+</section>
+<!-- Official Streaming Partners Grid -->
+<section class="mb-stack-lg">
+<div class="flex items-center justify-between mb-stack-md">
+<h3 class="font-headline-lg text-headline-lg text-primary">Official Streaming Partners</h3>
+<span class="text-on-surface-variant font-label-caps text-label-caps cursor-pointer hover:text-primary-fixed">View All</span>
+</div>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Partner 1 -->
+<div class="glass-card p-stack-lg flex flex-col items-center justify-center gap-stack-md hover:border-primary-container/40 transition-all cursor-pointer group">
+<div class="w-full h-12 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
+<!-- Placeholder for JioCinema -->
+<span class="text-primary font-display-score text-headline-md italic tracking-tighter">JioCinema</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Indian Premier League</span>
+</div>
+<!-- Partner 2 -->
+<div class="glass-card p-stack-lg flex flex-col items-center justify-center gap-stack-md hover:border-primary-container/40 transition-all cursor-pointer group">
+<div class="w-full h-12 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
+<!-- Placeholder for Disney+ Hotstar -->
+<span class="text-primary font-display-score text-headline-md italic tracking-tighter">Disney+ <span class="text-secondary">hotstar</span></span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">ICC Events • Premier League</span>
+</div>
+<!-- Partner 3 -->
+<div class="glass-card p-stack-lg flex flex-col items-center justify-center gap-stack-md hover:border-primary-container/40 transition-all cursor-pointer group">
+<div class="w-full h-12 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
+<!-- Placeholder for SonyLIV -->
+<span class="text-primary font-display-score text-headline-md italic tracking-tighter">SonyLIV</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Champions League • Tennis</span>
+</div>
+<!-- Partner 4 -->
+<div class="glass-card p-stack-lg flex flex-col items-center justify-center gap-stack-md hover:border-primary-container/40 transition-all cursor-pointer group">
+<div class="w-full h-12 flex items-center justify-center opacity-80 group-hover:opacity-100 transition-opacity">
+<!-- Placeholder for Sky Sports -->
+<span class="text-primary font-display-score text-headline-md italic tracking-tighter">sky sports</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">F1 • Boxing • Golf</span>
+</div>
+</div>
+</section>
+<!-- Live Event Channels Bento Grid -->
+<section>
+<div class="flex items-center justify-between mb-stack-md">
+<h3 class="font-headline-lg text-headline-lg text-primary">Live Event Channels</h3>
+<div class="flex items-center gap-stack-md">
+<span class="text-on-surface-variant font-label-caps text-label-caps flex items-center gap-unit cursor-pointer hover:text-primary-fixed">
+<span class="material-symbols-outlined text-[16px]">filter_list</span> Filter
+                    </span>
+<span class="text-on-surface-variant font-label-caps text-label-caps flex items-center gap-unit cursor-pointer hover:text-primary-fixed">
+<span class="material-symbols-outlined text-[16px]">sort</span> Sort By
+                    </span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-gutter">
+<!-- Live Card 1 -->
+<div class="glass-card rounded-xl overflow-hidden hover:translate-y-[-4px] transition-transform duration-300 group cursor-pointer">
+<div class="relative h-40 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A focused high-angle view of a professional soccer match in progress under stadium lights. The grass is vibrant electric green, and the movement is blurred to capture the high-energy action. The lighting reflects a cinematic dark broadcast aesthetic with deep blues and brilliant highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4JL9ONTiGyJsTZPN2z1ABRdsJz8EGPYIOWNophWzAZ2SEcgbGDF9FseGb0-K9KSGd3YiWWUP2QpnTWYkbVkAuuaI-Ttc8_bbSdDcROT23xXXNQlVAv_Kbyg2DDuQhxqXh_ThjnvwXQ-eO3lEhqna_KmVZ8K3fGScLTyt4R3eTf93A9vMPKHkO89U59yas9swoXr6aXuFZWufT5xfntdLDLFMKKdyAU9eFBIZj2xM1FH9JeodCuJ04FyfdJkHv3ZB5h5B61g0dOlQ"/>
+<div class="absolute top-stack-sm left-stack-sm flex items-center gap-unit">
+<div class="bg-error px-stack-sm py-unit rounded font-label-caps text-[10px] text-white flex items-center gap-unit">
+<span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span> LIVE
+                             </div>
+<div class="bg-surface-container-highest/80 backdrop-blur px-stack-sm py-unit rounded font-label-caps text-[10px] text-primary-fixed">
+                                HD 4K
+                             </div>
+</div>
+</div>
+<div class="p-stack-md">
+<p class="font-label-caps text-label-caps text-primary-fixed mb-unit uppercase">Premier League</p>
+<h4 class="font-headline-md text-headline-md text-on-surface mb-stack-sm">Liverpool vs Arsenal</h4>
+<div class="flex items-center justify-between">
+<span class="text-on-surface-variant text-body-sm font-body-sm">45,210 watching</span>
+<span class="material-symbols-outlined text-primary-fixed group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Live Card 2 -->
+<div class="glass-card rounded-xl overflow-hidden hover:translate-y-[-4px] transition-transform duration-300 group cursor-pointer">
+<div class="relative h-40 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A high-intensity Formula 1 racing car zooming past a grandstand at dusk. The glowing red brake lights and sparks under the car create a dynamic, energetic atmosphere. The scene is illuminated by neon track lights, fitting the dark stadium and glassmorphism design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcJAjhpXyJOacgjiNPaQ7vEEYEwyNd_Nh5GlwbWc2kMRVRYFeBIzuuc7og6Lek-yus2WeeExWlIlCmZucQFi-nIdHr73B3AzpouzdkDKnOYXTN01jn7J_YRPSn3r9IPLHqbKnGCkgLmBiLmnrLUoUhxhP5W-VzIPsI-316VmObmsrRvpzirhmdmEzQi-rcQ10kxpN0sf1kMig-UHcXVFqlpv4EZ_1fwNPvSBntHx1gBx7VBIylIlLTnJ4iEKwjwp4dcuLYtAQV6xc"/>
+<div class="absolute top-stack-sm left-stack-sm flex items-center gap-unit">
+<div class="bg-error px-stack-sm py-unit rounded font-label-caps text-[10px] text-white flex items-center gap-unit">
+<span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span> LIVE
+                             </div>
+</div>
+</div>
+<div class="p-stack-md">
+<p class="font-label-caps text-label-caps text-primary-fixed mb-unit uppercase">Formula 1</p>
+<h4 class="font-headline-md text-headline-md text-on-surface mb-stack-sm">Monaco Grand Prix: Race Day</h4>
+<div class="flex items-center justify-between">
+<span class="text-on-surface-variant text-body-sm font-body-sm">1.2M watching</span>
+<span class="material-symbols-outlined text-primary-fixed group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Live Card 3 -->
+<div class="glass-card rounded-xl overflow-hidden hover:translate-y-[-4px] transition-transform duration-300 group cursor-pointer">
+<div class="relative h-40 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A cinematic side view of a tennis player preparing to serve on a dark court. The only lighting comes from a strong overhead spotlight, making the player and the ball glow against the dark void of the arena. Vibrant electric green accents define the court lines in this modern broadcast style image." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-j0fxpLN1nzYLfA0HnoUQhPCKk7S8wmQ3HhTQIdrgLMvn9z9P04E2Do2TITLFknPfyluHcLnjtC9flqwypGwe6IBB7kiqP88h0ilf14OJcw5kcbHwZNDgeBL75cxu2Zts6oFKWGZacHVzs_OCY-DY5X58rll5KvYR63daSK6RvLZ0frRpPshl09VmlpXtTFASqyZSkAFbEyAsr96YO5OSQ4jhLpiCaIh9qie_sTLsQVAFuxRuLzuhTr2Y0UDpym1sLlTJS-tfMMo"/>
+<div class="absolute top-stack-sm left-stack-sm flex items-center gap-unit">
+<div class="bg-error px-stack-sm py-unit rounded font-label-caps text-[10px] text-white flex items-center gap-unit">
+<span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span> LIVE
+                             </div>
+</div>
+</div>
+<div class="p-stack-md">
+<p class="font-label-caps text-label-caps text-primary-fixed mb-unit uppercase">ATP Masters 1000</p>
+<h4 class="font-headline-md text-headline-md text-on-surface mb-stack-sm">Djokovic vs Alcaraz</h4>
+<div class="flex items-center justify-between">
+<span class="text-on-surface-variant text-body-sm font-body-sm">88k watching</span>
+<span class="material-symbols-outlined text-primary-fixed group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Live Card 4 -->
+<div class="glass-card rounded-xl overflow-hidden hover:translate-y-[-4px] transition-transform duration-300 group cursor-pointer border-dashed border-outline-variant">
+<div class="h-full flex flex-col items-center justify-center p-stack-lg gap-stack-md text-center">
+<span class="material-symbols-outlined text-48px text-surface-container-highest">add_circle</span>
+<div class="flex flex-col gap-unit">
+<h4 class="font-headline-md text-headline-md text-on-surface-variant">Add More Channels</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant/60">Customize your live hub</p>
+</div>
+<button class="font-label-caps text-label-caps text-primary-fixed hover:underline">Manage Subscriptions</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Action Bar (Mobile Only) -->
+<nav class="fixed bottom-0 w-full md:hidden bg-surface-container/80 backdrop-blur-xl z-50 flex justify-around items-center h-16 border-t border-outline-variant/10">
+<div class="flex flex-col items-center gap-unit text-on-surface-variant">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-label-caps uppercase">Home</span>
+</div>
+<div class="flex flex-col items-center gap-unit text-on-surface-variant">
+<span class="material-symbols-outlined">sports_soccer</span>
+<span class="text-[10px] font-label-caps uppercase">Live</span>
+</div>
+<div class="flex flex-col items-center gap-unit text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+<span class="text-[10px] font-label-caps uppercase">Watch</span>
+</div>
+<div class="flex flex-col items-center gap-unit text-on-surface-variant">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-label-caps uppercase">Account</span>
+</div>
+</nav>
+</body></html>

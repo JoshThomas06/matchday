@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MATCHDAY | Football Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&amp;family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #051424;
+            color: #d4e4fa;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-card {
+            background: rgba(39, 54, 71, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .pulse-dot {
+            box-shadow: 0 0 10px #00ff87;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary": "#003919",
+                      "error": "#ffb4ab",
+                      "primary-fixed": "#60ff98",
+                      "on-tertiary-container": "#5d6170",
+                      "surface-variant": "#273647",
+                      "on-primary-container": "#007138",
+                      "on-secondary-container": "#4e3400",
+                      "on-background": "#d4e4fa",
+                      "on-tertiary": "#2c303d",
+                      "tertiary-fixed-dim": "#c3c6d7",
+                      "on-secondary": "#432c00",
+                      "secondary-fixed": "#ffdead",
+                      "surface-container-low": "#0d1c2d",
+                      "secondary-container": "#d89700",
+                      "on-surface-variant": "#b9cbb9",
+                      "secondary": "#ffba3a",
+                      "outline": "#849585",
+                      "on-secondary-fixed-variant": "#604100",
+                      "on-tertiary-fixed-variant": "#434654",
+                      "inverse-surface": "#d4e4fa",
+                      "tertiary-fixed": "#dfe2f3",
+                      "surface": "#051424",
+                      "surface-container-highest": "#273647",
+                      "secondary-fixed-dim": "#ffba3a",
+                      "primary": "#f1ffef",
+                      "on-primary-fixed": "#00210c",
+                      "on-secondary-fixed": "#281900",
+                      "tertiary-container": "#dbddef",
+                      "surface-container": "#122131",
+                      "inverse-primary": "#006d36",
+                      "surface-container-high": "#1c2b3c",
+                      "primary-container": "#00ff87",
+                      "surface-bright": "#2c3a4c",
+                      "on-error": "#690005",
+                      "outline-variant": "#3b4b3d",
+                      "inverse-on-surface": "#233143",
+                      "on-error-container": "#ffdad6",
+                      "tertiary": "#fcfaff",
+                      "surface-tint": "#00e478",
+                      "surface-container-lowest": "#010f1f",
+                      "primary-fixed-dim": "#00e478",
+                      "on-surface": "#d4e4fa",
+                      "error-container": "#93000a",
+                      "background": "#051424",
+                      "on-tertiary-fixed": "#171b28",
+                      "surface-dim": "#051424",
+                      "on-primary-fixed-variant": "#005227"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-lg": "24px",
+                      "stack-md": "16px",
+                      "margin-desktop": "24px",
+                      "gutter": "16px",
+                      "margin-mobile": "16px",
+                      "stack-sm": "8px",
+                      "unit": "4px"
+              },
+              "fontFamily": {
+                      "display-score": ["Archivo Narrow"],
+                      "body-sm": ["Inter"],
+                      "headline-md": ["Archivo Narrow"],
+                      "headline-lg-mobile": ["Archivo Narrow"],
+                      "body-lg": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "headline-lg": ["Archivo Narrow"]
+              },
+              "fontSize": {
+                      "display-score": ["48px", {"lineHeight": "48px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "700"}],
+                      "headline-lg": ["32px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="bg-background overflow-hidden">
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 w-full z-50 bg-surface/60 backdrop-blur-xl border-b border-outline-variant/10 shadow-[0_0_15px_rgba(0,228,120,0.1)] h-16 px-margin-desktop flex justify-between items-center">
+<div class="flex items-center gap-stack-md">
+<span class="font-headline-lg text-headline-lg font-black text-primary tracking-tighter">MATCHDAY</span>
+<div class="hidden md:flex gap-stack-md ml-12">
+<span class="font-label-caps text-label-caps text-primary border-b-2 border-primary-container pb-1 cursor-pointer transition-colors duration-200">FOOTBALL</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary-fixed cursor-pointer transition-colors duration-200">CRICKET</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary-fixed cursor-pointer transition-colors duration-200">TENNIS</span>
+</div>
+</div>
+<div class="flex items-center gap-stack-md">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="bg-surface-container-high border border-outline-variant/30 rounded-lg pl-10 pr-4 py-1.5 text-body-sm focus:outline-none focus:border-primary-container" placeholder="Search matches..." type="text"/>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary active:scale-95 transition-all">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary active:scale-95 transition-all">settings</span>
+<div class="flex items-center gap-2 ml-2 cursor-pointer active:scale-95 transition-all">
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary-container/50">
+<img alt="User Avatar" data-alt="A close-up professional headshot of a young male sports analyst with a friendly expression. The lighting is crisp and cool-toned, reflecting a modern broadcast studio atmosphere. The background is a soft-focus bokeh of digital screens displaying green and blue data charts, maintaining a high-fidelity glassmorphic aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRAsFECGYW137hW8eu_FZwZhJMnSHo3u8omrnmPfnSyrDk20yIk6MaN2dcy8tjSjwjMQLMVsYxXEiM6F7J_g0ZSJP88RDodkyle9m1OnP09MZGOdwC5tUsj2SZWpqIIAu82v9b2i5DwQlI2CSFqWDoZd0aKx51JL6OpbJK6sDBFZpg572jcx428qBSTLOHprEiDv8mEk_SI0yREtRWeeEIehA2QSjpqeraUFA6e6VWLCYIyC5DiPfa68osACWxzzsITeKPWjYuR5k"/>
+</div>
+<span class="font-label-caps text-label-caps text-primary hidden sm:inline">PRO USER</span>
+</div>
+</div>
+</header>
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full w-64 z-40 bg-surface-container/60 backdrop-blur-2xl border-r border-outline-variant/10 shadow-2xl flex flex-col p-gutter gap-stack-md pt-20">
+<div class="flex flex-col gap-unit mb-stack-md">
+<span class="text-primary font-headline-lg text-headline-lg italic">MATCHDAY</span>
+<span class="text-on-surface-variant text-[10px] tracking-widest font-bold uppercase">Live Dashboard</span>
+</div>
+<nav class="flex flex-col gap-1">
+<div class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant/30 rounded-lg transition-transform duration-200 hover:translate-x-1 cursor-pointer">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</div>
+<!-- Active State: Football -->
+<div class="flex items-center gap-3 p-3 bg-primary-container text-on-primary-container rounded-lg font-bold shadow-[0_0_10px_rgba(0,255,135,0.3)] transition-transform duration-200 cursor-pointer">
+<span class="material-symbols-outlined">sports_soccer</span>
+<span class="font-label-caps text-label-caps">Football</span>
+</div>
+<!-- Sub-navigation for Football -->
+<div class="ml-9 flex flex-col gap-1 border-l border-outline-variant/30 pl-3 my-2">
+<span class="font-label-caps text-label-caps py-1 text-primary cursor-pointer hover:text-primary-fixed">Premier League</span>
+<span class="font-label-caps text-label-caps py-1 text-on-surface-variant cursor-pointer hover:text-primary-fixed">La Liga</span>
+<span class="font-label-caps text-label-caps py-1 text-on-surface-variant cursor-pointer hover:text-primary-fixed">Champions League</span>
+<span class="font-label-caps text-label-caps py-1 text-on-surface-variant cursor-pointer hover:text-primary-fixed">World Cup</span>
+</div>
+<div class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant/30 rounded-lg transition-transform duration-200 hover:translate-x-1 cursor-pointer">
+<span class="material-symbols-outlined">sports_cricket</span>
+<span class="font-label-caps text-label-caps">Cricket</span>
+</div>
+<div class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant/30 rounded-lg transition-transform duration-200 hover:translate-x-1 cursor-pointer">
+<span class="material-symbols-outlined">sensors</span>
+<span class="font-label-caps text-label-caps">Live Events</span>
+</div>
+<div class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant/30 rounded-lg transition-transform duration-200 hover:translate-x-1 cursor-pointer">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-caps text-label-caps">My Teams</span>
+</div>
+<div class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant/30 rounded-lg transition-transform duration-200 hover:translate-x-1 cursor-pointer">
+<span class="material-symbols-outlined">monitoring</span>
+<span class="font-label-caps text-label-caps">Analytics</span>
+</div>
+</nav>
+<div class="mt-auto flex flex-col gap-stack-sm">
+<button class="bg-primary-container text-on-primary-container font-bold py-3 rounded-lg text-label-caps hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">forum</span>
+                Join Live Chat
+            </button>
+<div class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant/30 rounded-lg cursor-pointer">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-caps text-label-caps">Help</span>
+</div>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="ml-64 pt-16 h-screen overflow-y-auto px-margin-desktop pb-stack-lg">
+<div class="grid grid-cols-12 gap-gutter mt-stack-md">
+<!-- Featured Match Area (Bento Top) -->
+<section class="col-span-12 lg:col-span-8 space-y-stack-md">
+<div class="glass-card rounded-xl p-8 relative overflow-hidden flex flex-col items-center justify-center min-h-[300px]">
+<!-- Background accent -->
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none"></div>
+<!-- Live Badge -->
+<div class="absolute top-6 left-6 flex items-center gap-2 bg-surface-container-highest px-3 py-1 rounded-full border border-primary-container/20">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse pulse-dot"></span>
+<span class="text-label-caps font-bold text-primary-container">LIVE 67'</span>
+</div>
+<div class="flex w-full items-center justify-around z-10">
+<!-- Home Team -->
+<div class="flex flex-col items-center gap-stack-sm">
+<div class="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center border-2 border-outline-variant/30">
+<img alt="Arsenal" class="w-16 h-16 object-contain" data-alt="A stylized, high-contrast logo of a professional football club with cannon elements, rendered in premium gold and deep red metallic textures. The lighting is dramatic, highlighting the 3D depth and glossy surface of the badge against a dark, tech-infused background with glowing green circuitry lines." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJLYFrKBWuGoSi4ewOq3P4SLlegZZdiQamrUjAJuWNmRfya5vNL9YQIwiEreah6fY6WeqrJrtjjF6ejKGJPopDq2EGbO-TAl2tFc3YEyEGtq7NmAW3X5rUccyxGdKBtjfuoapFefdzxBxJqxuz8vT-H0WjSyKS189zGahVb23dQxtiONuMAb8KH_MRQn4dqfrVz8AjkNRrj6bDE7rv0Qbe6kD3Dq4f9rxrHH_KN-GdGMCt3MteeQ_GXGg3r7MqVW9pS1z16bv0-8Y"/>
+</div>
+<span class="font-headline-md text-headline-md text-primary">Arsenal</span>
+</div>
+<!-- Scoreboard -->
+<div class="flex flex-col items-center">
+<div class="font-display-score text-display-score text-primary flex gap-4">
+<span>2</span>
+<span class="text-on-surface-variant opacity-50">-</span>
+<span>1</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant tracking-widest mt-2">Premier League</span>
+</div>
+<!-- Away Team -->
+<div class="flex flex-col items-center gap-stack-sm">
+<div class="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center border-2 border-outline-variant/30">
+<img alt="Man City" class="w-16 h-16 object-contain" data-alt="A futuristic professional sports crest featuring a sailing ship and rose, reimagined with electric cyan and silver metallic finishes. The design is sleek and modern, presented on a dark navy glass surface with subtle lens flares and a high-tech broadcast control room aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuALEWglcWPXlDBHJHvDvO_WTNF5ym-TYfcLzXcXhEnWQZqI_gSTuCglXm8kgwI7PAwgTSLHiSfbmD4zNY4hrFVIPMOHDpKF3KZ0s3o5bs5YH44d-UEaUb2l704CdwU0E94abSPUfVrbgMxS72pU43VbuHveTXI08p8AMhO4PtL3mHLIkBBwHe7wy4dZS-GaBXbkRGxcvRnLybWVz8nsenpr42qVskZk18y8XRaliZe0AS37rjqWuEx4QJjQFC9CDekKa0GVERrDOdo"/>
+</div>
+<span class="font-headline-md text-headline-md text-primary">Man City</span>
+</div>
+</div>
+<div class="mt-8 flex gap-stack-md z-10">
+<button class="bg-primary-container text-on-primary-container font-bold px-6 py-2 rounded-lg text-label-caps flex items-center gap-2 hover:brightness-110 shadow-[0_0_15px_rgba(0,255,135,0.4)] transition-all">
+<span class="material-symbols-outlined text-[18px]">videocam</span> WATCH LIVE
+                        </button>
+<button class="bg-surface-variant text-primary font-bold px-6 py-2 rounded-lg text-label-caps border border-outline-variant hover:bg-surface-container-highest transition-all">
+                            COMMENTARY
+                        </button>
+</div>
+</div>
+<!-- Live Engagement Widgets (Horizontal Grid) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<!-- Fan Pulse -->
+<div class="glass-card rounded-xl p-stack-md">
+<div class="flex justify-between items-center mb-4">
+<span class="font-label-caps text-label-caps text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">insights</span> FAN PULSE
+                            </span>
+<span class="text-[10px] text-on-surface-variant">42.5K VOTES</span>
+</div>
+<div class="relative h-6 w-full bg-surface-container rounded-full overflow-hidden border border-outline-variant/20">
+<div class="absolute left-0 top-0 h-full bg-gradient-to-r from-primary-container to-primary w-[65%] transition-all"></div>
+<div class="absolute right-0 top-0 h-full bg-gradient-to-l from-secondary to-secondary-container w-[35%] transition-all"></div>
+<div class="absolute inset-0 flex justify-between items-center px-4">
+<span class="text-[10px] font-bold text-on-primary">ARS 65%</span>
+<span class="text-[10px] font-bold text-on-secondary">MCY 35%</span>
+</div>
+</div>
+<p class="mt-3 text-body-sm text-on-surface-variant italic text-center">Fans favor a third Arsenal goal before 80'</p>
+</div>
+<!-- Predict Next Goal Poll -->
+<div class="glass-card rounded-xl p-stack-md">
+<span class="font-label-caps text-label-caps text-primary flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-[18px] text-primary-container">poll</span> PREDICT NEXT GOAL
+                        </span>
+<div class="flex gap-2">
+<button class="flex-1 py-2 rounded-lg border border-outline-variant/30 text-[11px] font-bold text-on-surface-variant hover:border-primary-container hover:text-primary transition-all">Arsenal</button>
+<button class="flex-1 py-2 rounded-lg border border-outline-variant/30 text-[11px] font-bold text-on-surface-variant hover:border-primary-container hover:text-primary transition-all">Man City</button>
+<button class="flex-1 py-2 rounded-lg border border-outline-variant/30 text-[11px] font-bold text-on-surface-variant hover:border-primary-container hover:text-primary transition-all">No More</button>
+</div>
+</div>
+</div>
+<!-- Key Moments Timeline -->
+<div class="glass-card rounded-xl p-stack-md">
+<span class="font-label-caps text-label-caps text-primary flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-[18px]">history</span> KEY MOMENTS
+                    </span>
+<div class="space-y-6 relative ml-4">
+<div class="absolute left-[7px] top-1 bottom-1 w-0.5 bg-outline-variant/20"></div>
+<!-- Timeline Item 1 -->
+<div class="flex gap-stack-md relative">
+<div class="w-4 h-4 rounded-full bg-primary-container border-4 border-surface ring-2 ring-primary-container/20 z-10"></div>
+<div class="flex-1 -mt-1">
+<div class="flex justify-between items-start">
+<span class="font-display-score text-[14px] text-primary-container">64'</span>
+<span class="text-[10px] text-on-surface-variant px-2 py-0.5 rounded bg-surface-container">VAR REVIEW</span>
+</div>
+<p class="font-body-lg text-body-lg text-primary mt-1">Goal Confirmed! Gabriel Jesus header</p>
+<p class="text-body-sm text-on-surface-variant">Assist by Martin Ødegaard</p>
+</div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="flex gap-stack-md relative">
+<div class="w-4 h-4 rounded-full bg-secondary border-4 border-surface ring-2 ring-secondary/20 z-10"></div>
+<div class="flex-1 -mt-1">
+<div class="flex justify-between items-start">
+<span class="font-display-score text-[14px] text-secondary">42'</span>
+<span class="text-[10px] text-on-surface-variant px-2 py-0.5 rounded bg-surface-container">PENALTY</span>
+</div>
+<p class="font-body-lg text-body-lg text-primary mt-1">Goal! Haaland converts from the spot</p>
+</div>
+</div>
+<!-- Timeline Item 3 -->
+<div class="flex gap-stack-md relative">
+<div class="w-4 h-4 rounded-full bg-primary-container border-4 border-surface ring-2 ring-primary-container/20 z-10"></div>
+<div class="flex-1 -mt-1">
+<div class="flex justify-between items-start">
+<span class="font-display-score text-[14px] text-primary-container">12'</span>
+<span class="text-[10px] text-on-surface-variant px-2 py-0.5 rounded bg-surface-container">OPENER</span>
+</div>
+<p class="font-body-lg text-body-lg text-primary mt-1">Goal! Bukayo Saka scores a screamer</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Detailed Live Stats Panel (Sticky Right) -->
+<section class="col-span-12 lg:col-span-4 h-fit sticky top-stack-md">
+<div class="glass-card rounded-xl overflow-hidden shadow-2xl">
+<div class="bg-surface-container-high p-stack-md border-b border-outline-variant/20 flex justify-between items-center">
+<span class="font-label-caps text-label-caps text-primary tracking-widest">LIVE STATISTICS</span>
+<span class="material-symbols-outlined text-primary-container">monitoring</span>
+</div>
+<div class="p-stack-md space-y-stack-md">
+<!-- Stat Row: Possession -->
+<div>
+<div class="flex justify-between text-[11px] font-bold mb-2">
+<span class="text-primary-container">48% POSSESSION</span>
+<span class="text-secondary">52% POSSESSION</span>
+</div>
+<div class="flex h-1.5 rounded-full overflow-hidden bg-surface-container">
+<div class="bg-primary-container w-[48%] h-full"></div>
+<div class="bg-secondary w-[52%] h-full"></div>
+</div>
+</div>
+<!-- Stat Grid -->
+<div class="grid grid-cols-3 gap-2 py-4 border-y border-outline-variant/10">
+<div class="flex flex-col items-center">
+<span class="font-display-score text-[20px] text-primary">12</span>
+<span class="text-[9px] text-on-surface-variant font-bold uppercase">Shots</span>
+</div>
+<div class="flex flex-col items-center border-x border-outline-variant/10">
+<span class="font-display-score text-[20px] text-primary">5</span>
+<span class="text-[9px] text-on-surface-variant font-bold uppercase">On Target</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="font-display-score text-[20px] text-primary">0.98</span>
+<span class="text-[9px] text-on-surface-variant font-bold uppercase">xG</span>
+</div>
+<div class="flex flex-col items-center mt-4">
+<span class="font-display-score text-[20px] text-secondary">9</span>
+<span class="text-[9px] text-on-surface-variant font-bold uppercase">Shots</span>
+</div>
+<div class="flex flex-col items-center border-x border-outline-variant/10 mt-4">
+<span class="font-display-score text-[20px] text-secondary">3</span>
+<span class="text-[9px] text-on-surface-variant font-bold uppercase">On Target</span>
+</div>
+<div class="flex flex-col items-center mt-4">
+<span class="font-display-score text-[20px] text-secondary">1.42</span>
+<span class="text-[9px] text-on-surface-variant font-bold uppercase">xG</span>
+</div>
+</div>
+<!-- Heatmap Placeholder -->
+<div class="space-y-stack-sm">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Attacking Pressure</span>
+<div class="h-40 rounded-lg bg-surface-container relative overflow-hidden group cursor-pointer">
+<img alt="Pressure Map" class="w-full h-full object-cover opacity-30 grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="A detailed digital tactical football pitch graphic showing a heatmap of player density. The high-pressure areas are rendered in glowing neon green and amber overlays against a dark, minimalist blueprint of the stadium field. The style is strictly high-tech data visualization with sharp lines and glassmorphic texture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2Rv0YaEvUwiehTjD5Mbs9t5cz7sSnE9oha2kluFcF7AB1YWtg6KcFm_u7iBqD_L-Cv08VZXPCRdJHOjRaf2Q3UKz656uBLExd0B_nKtOUui-9hELBEYyoDU1AO3IUeUqZe5w3AoXTAd8cNuVIQ9mbfiwXEoaeeSYPzrSt1IzA7whFEUueRSOLjY4prBwNx_HOz8NfZ8Lp1kNXirVS3DLkx6ZWO4304RnMw39rBYSZvOmtbYZOgcsmTAZRlfRS_DEzQUa3Z_BaoIY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent"></div>
+<div class="absolute bottom-4 left-4">
+<span class="text-[10px] text-primary-container font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span> Arsenal Heavy Left-Side
+                                    </span>
+</div>
+</div>
+</div>
+<!-- Player Focus -->
+<div class="glass-card bg-surface-container-low rounded-lg p-3 border border-primary-container/10">
+<div class="flex items-center gap-3">
+<img alt="Player" class="w-10 h-10 rounded-full border border-primary-container" data-alt="A professional studio portrait of a star football player in action, with beads of sweat catching the high-key studio light. The background is a dark, cinematic blur with subtle light streaks in the brand's electric green. The image quality is extremely high-definition, focusing on the intense competitive expression of the athlete." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApGtZYmKMwZXlHEj0XWpRHMjPgc09S3RUl0pqIE4IdleMXC961IqScD2pqYo3ahQvLSxQgYaRJgwIRpIehG99UB3Q-Wzh1IMVmeCMdiA08YPBL2QWRuAr_waX6YQ6x86d7YNdVDNE6630lQfVeJyMl1kaMhMfi3KQtOKyqFk4DFNw9TQan3sO3xYuybSZHLhy_XPw2KVxqC4cMcXjfX7I8HnoSBFF5RrUWo5MV_Ia2PnX9kXtZW9RkCNNIrhJFxrO7-WmevI7Nlik"/>
+<div>
+<p class="text-[11px] font-bold text-primary">Bukayo Saka</p>
+<p class="text-[9px] text-on-surface-variant">PLAYER OF THE MATCH (CURRENT)</p>
+</div>
+<div class="ml-auto text-right">
+<span class="font-display-score text-[18px] text-primary-container">8.7</span>
+<p class="text-[9px] text-on-surface-variant">RATING</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- FAB for quick actions -->
+<div class="fixed bottom-8 right-8 z-50">
+<button class="w-14 h-14 bg-primary-container text-on-primary-container rounded-full shadow-[0_0_20px_rgba(0,255,135,0.6)] flex items-center justify-center active:scale-90 transition-all">
+<span class="material-symbols-outlined text-[32px]">add</span>
+</button>
+</div>
+</body></html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&amp;family=Inter:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#ffdad6",
+                    "outline": "#849585",
+                    "surface-container-low": "#0d1c2d",
+                    "surface-container-high": "#1c2b3c",
+                    "on-surface-variant": "#b9cbb9",
+                    "surface-container-highest": "#273647",
+                    "surface-dim": "#051424",
+                    "tertiary-fixed-dim": "#c3c6d7",
+                    "secondary-fixed-dim": "#ffba3a",
+                    "on-primary-container": "#007138",
+                    "on-secondary-fixed": "#281900",
+                    "surface-container": "#122131",
+                    "surface-tint": "#00e478",
+                    "primary": "#f1ffef",
+                    "secondary-fixed": "#ffdead",
+                    "on-primary-fixed-variant": "#005227",
+                    "on-tertiary-container": "#5d6170",
+                    "tertiary-fixed": "#dfe2f3",
+                    "surface-bright": "#2c3a4c",
+                    "tertiary-container": "#dbddef",
+                    "inverse-on-surface": "#233143",
+                    "on-secondary-container": "#4e3400",
+                    "secondary": "#ffba3a",
+                    "on-error": "#690005",
+                    "on-tertiary-fixed": "#171b28",
+                    "surface-container-lowest": "#010f1f",
+                    "on-tertiary-fixed-variant": "#434654",
+                    "error": "#ffb4ab",
+                    "secondary-container": "#d89700",
+                    "outline-variant": "#3b4b3d",
+                    "error-container": "#93000a",
+                    "on-secondary-fixed-variant": "#604100",
+                    "on-secondary": "#432c00",
+                    "on-background": "#d4e4fa",
+                    "primary-fixed": "#60ff98",
+                    "primary-fixed-dim": "#00e478",
+                    "background": "#051424",
+                    "surface": "#051424",
+                    "on-tertiary": "#2c303d",
+                    "primary-container": "#00ff87",
+                    "tertiary": "#fcfaff",
+                    "on-surface": "#d4e4fa",
+                    "inverse-primary": "#006d36",
+                    "inverse-surface": "#d4e4fa",
+                    "on-primary-fixed": "#00210c",
+                    "on-primary": "#003919",
+                    "surface-variant": "#273647"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "stack-md": "16px",
+                    "margin-mobile": "16px",
+                    "unit": "4px",
+                    "stack-lg": "24px",
+                    "margin-desktop": "24px",
+                    "stack-sm": "8px"
+            },
+            "fontFamily": {
+                    "body-sm": ["Inter"],
+                    "headline-lg-mobile": ["Archivo Narrow"],
+                    "display-score": ["Archivo Narrow"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Archivo Narrow"],
+                    "label-caps": ["Inter"],
+                    "headline-md": ["Archivo Narrow"]
+            },
+            "fontSize": {
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "display-score": ["48px", {"lineHeight": "48px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(39, 54, 71, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .electric-glow {
+            box-shadow: 0 0 15px rgba(0, 228, 120, 0.3);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-lg min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/60 dark:bg-surface/60 backdrop-blur-xl border-b border-white/10 shadow-[0_0_15px_rgba(0,228,120,0.1)]">
+<div class="flex items-center justify-between px-gutter w-full max-w-[390px] mx-auto h-16">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-fixed" data-icon="sports_soccer">sports_soccer</span>
+<h1 class="font-headline-md text-headline-md tracking-tight text-primary dark:text-primary-fixed">ARS 2-1 MCI • 67'</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-error" data-icon="sensors">sensors</span>
+</div>
+</div>
+</header>
+<main class="pt-20 px-gutter max-w-[390px] mx-auto space-y-stack-lg">
+<!-- Leaderboard Strip -->
+<section class="glass-card rounded-xl p-stack-sm flex items-center justify-between overflow-x-auto gap-4 no-scrollbar">
+<div class="flex items-center gap-2 min-w-fit">
+<div class="relative">
+<img class="w-8 h-8 rounded-full border border-secondary" data-alt="A detailed 3D avatar of a sports fan with a crown icon, styled in a futuristic neon aesthetic with vibrant amber and green lighting, against a dark technological background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsDsiKVgmsOaATkYMddQ4jakCmXMmvRQzzgKCiXjF-m36xCnQ2U2NsOq8KwKnLMvrmjhoVi5lPIH2BqKfbqmAt9sE1BMd7Qz2IaErM17_PPLm-L62n4kSXZ3myKnLA__1lSwCWMZkL5kWcUcIjDiRuDkcsMmqPxKxNPr1t6AwNydMWesctp8aNi8DKoJU3Pk0cjTMdSwB-7tLrGy7JBI-GXm2CCJvAVic3d_OmVqTJEIYO3Ydns2J4nKq4ksFPIYdlZLGNJlbtfvU"/>
+<span class="absolute -top-1 -right-1 bg-secondary text-on-secondary text-[8px] px-1 rounded-full font-bold">1</span>
+</div>
+<div>
+<p class="font-label-caps text-[10px] text-outline">@footyfan99</p>
+<p class="font-headline-md text-sm text-secondary">88%</p>
+</div>
+</div>
+<div class="h-8 w-px bg-white/10"></div>
+<div class="flex items-center gap-2 min-w-fit">
+<img class="w-8 h-8 rounded-full border border-outline" data-alt="A sleek digital avatar profile picture of a young male fan wearing a red jersey, illuminated by soft cinematic lighting in a dark stadium-themed room, high contrast and sharp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzre9aaYKOg82zl7lT3P7iIWhe6dSje7-U4-Ved68ibX9dl9q_sfQU4ZQyYhsGZyA3UTseZ5kYGU1N1bl9F2a0FPwEb0bqPsGKD4Bd0Y0om9qyVHKomOIHFS88jZrdo3CXMPjycdVZGV5fr8AVplFl--79wIRRgyYskeYx-09Bc134loxUDvqiIBjIQ0tdoU10u3_-9CNBy9G-1sysX1gQ1pP_nKd0NfyQSr77IJpbostDC61rIQfgYc3zsqFIf_lo-0l1p1bAlZo"/>
+<div>
+<p class="font-label-caps text-[10px] text-outline">@gunnerforlife</p>
+<p class="font-headline-md text-sm text-on-surface">82%</p>
+</div>
+</div>
+<div class="h-8 w-px bg-white/10"></div>
+<div class="flex items-center gap-2 min-w-fit">
+<img class="w-8 h-8 rounded-full border border-outline" data-alt="A professional minimalist avatar of a fan with blue face paint, styled like a high-end video game character selection screen, featuring deep blue and electric green highlights on a pitch-black background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWKGvDETxQv4wjTCJeQ5rjOMhwA3TvhLE8qqbbu4tioMmerBDE2Ow2GopnlnHLgCES4VUTzdp0S6nm1W59rr4RfaMjGjOUnk3DhtcEQ8fQAE9CiChDGC0vte8_ysx1P0w8C-2Yt_BHWNM-p-R7hXNgb278_LtdcRqsHVCiFr7k5zor0BVU-U2d9tdxBWf-MuuFKRdCbOUv0Dpn7Rr1f9Knj-L_Ct9-TXpfYlQ6xmcVylU870JuVpGT8MJ52g0qCJIcmgxb1LVU0vI"/>
+<div>
+<p class="font-label-caps text-[10px] text-outline">@citytillidie</p>
+<p class="font-headline-md text-sm text-on-surface">79%</p>
+</div>
+</div>
+</section>
+<!-- Active Poll Section -->
+<section class="space-y-stack-sm">
+<div class="flex items-center justify-between px-1">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary-fixed animate-pulse shadow-[0_0_8px_rgba(0,228,120,1)]"></span>
+<h2 class="font-headline-md text-lg text-primary">Live Prediction</h2>
+</div>
+<div class="bg-surface-container-highest px-2 py-1 rounded text-label-caps text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="timer">timer</span>
+                    2:10
+                </div>
+</div>
+<div class="glass-card rounded-xl p-stack-md relative overflow-hidden">
+<div class="absolute top-0 left-0 h-1 w-full bg-surface-container-highest">
+<div class="h-full bg-primary-fixed" style="width: 65%;"></div>
+</div>
+<h3 class="font-headline-md text-xl mb-stack-md mt-2">Who scores next?</h3>
+<div class="grid grid-cols-2 gap-stack-md">
+<button class="flex flex-col items-center gap-2 group">
+<div class="w-full glass-card hover:border-primary-fixed transition-all py-4 rounded-xl flex flex-col items-center gap-1 active:scale-95 duration-150">
+<span class="font-headline-md text-2xl text-on-surface">61%</span>
+<span class="font-label-caps text-outline group-hover:text-primary-fixed">Arsenal</span>
+</div>
+</button>
+<button class="flex flex-col items-center gap-2 group">
+<div class="w-full glass-card hover:border-secondary transition-all py-4 rounded-xl flex flex-col items-center gap-1 active:scale-95 duration-150">
+<span class="font-headline-md text-2xl text-on-surface">39%</span>
+<span class="font-label-caps text-outline group-hover:text-secondary">Man City</span>
+</div>
+</button>
+</div>
+</div>
+</section>
+<!-- My Predictions Section -->
+<section class="space-y-stack-sm pb-8">
+<h2 class="font-headline-md text-lg px-1">My Predictions</h2>
+<div class="space-y-stack-sm">
+<!-- Prediction Item 1 -->
+<div class="glass-card rounded-xl p-stack-md flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="sports_soccer">sports_soccer</span>
+</div>
+<div>
+<p class="font-body-lg font-bold">First Yellow Card</p>
+<p class="font-body-sm text-outline">Rodri (MCI)</p>
+</div>
+</div>
+<div class="bg-on-primary-container/20 text-primary-fixed px-3 py-1 rounded-full text-label-caps flex items-center gap-1 border border-primary-fixed/30">
+<span class="material-symbols-outlined text-xs" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        Correct
+                    </div>
+</div>
+<!-- Prediction Item 2 -->
+<div class="glass-card rounded-xl p-stack-md flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="history_edu">history_edu</span>
+</div>
+<div>
+<p class="font-body-lg font-bold">HT Score</p>
+<p class="font-body-sm text-outline">1 - 0</p>
+</div>
+</div>
+<div class="bg-error-container/20 text-error px-3 py-1 rounded-full text-label-caps flex items-center gap-1 border border-error/30">
+<span class="material-symbols-outlined text-xs" data-icon="cancel" style="font-variation-settings: 'FILL' 1;">cancel</span>
+                        Wrong
+                    </div>
+</div>
+<!-- Prediction Item 3 -->
+<div class="glass-card rounded-xl p-stack-md flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="query_stats">query_stats</span>
+</div>
+<div>
+<p class="font-body-lg font-bold">Next Corner</p>
+<p class="font-body-sm text-outline">Arsenal</p>
+</div>
+</div>
+<div class="bg-on-primary-container/20 text-primary-fixed px-3 py-1 rounded-full text-label-caps flex items-center gap-1 border border-primary-fixed/30">
+<span class="material-symbols-outlined text-xs" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                        Correct
+                    </div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface/60 dark:bg-surface/60 backdrop-blur-xl border-t border-white/10 shadow-[0_-4px_20px_rgba(0,0,0,0.4)]">
+<div class="flex justify-around items-center w-full max-w-[390px] mx-auto h-20 pb-safe px-2">
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-caps text-label-caps">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="movie_filter">movie_filter</span>
+<span class="font-label-caps text-label-caps">Moments</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary-fixed drop-shadow-[0_0_8px_rgba(0,228,120,0.6)] scale-110 duration-200 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="query_stats" style="font-variation-settings: 'FILL' 1;">query_stats</span>
+<span class="font-label-caps text-label-caps">Predict</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+<span class="font-label-caps text-label-caps">Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-label-caps text-label-caps">Stats</span>
+</a>
+</div>
+</nav>
+</body></html>
